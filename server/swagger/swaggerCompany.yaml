@@ -1,0 +1,512 @@
+---
+openapi: 3.0.3
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API
+    url: http://localhost:5000/api
+info:
+  version: "1.0.0"
+  title: Company
+  description: The API for the task project from Techorely
+paths:
+  '/company':
+    get:
+      summary: Returns a list of companies.
+      tags:
+        - Fetch all companies
+      description: returns all companies
+      operationId: getAll
+      parameters:
+        - in: query
+          name: startDate
+          description: start date YYYY-MM-DD
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: endDate
+          description: end date YYYY-MM-DD
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: valueMin
+          description: capital min
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: userId
+          description: userId - who created company
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: role
+          description: role
+          schema:
+            type: string
+        - in: query
+          name: valueMax
+          description: capital max
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: page
+          description: number of records to skip
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: limit
+          description: max number of records to return
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: nameSort
+          description: name field for sort
+          schema:
+            type: string
+        - in: query
+          name: typeSort
+          description: type of sort - asc or desc
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Fetch all the companies
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Company'
+    post:
+      tags:
+        - Create company
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Company'
+      responses:
+        '200':
+          description: Succesful created company
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+    x-swagger-router-controller: companyRouter
+  '/company/{companyId}':
+    get:
+      tags:
+        - get company
+      operationId: getCompanyById
+      parameters:
+        - name: companyId
+          in: path
+          required: true
+          description: Unique identifier of the company
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+      x-swagger-router-controller: companyRouter
+    patch:
+      tags:
+        - update company
+      operationId: updateCompanyById
+      parameters:
+        - name: companyId
+          in: path
+          required: true
+          description: Unique identifier of the company
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Company'
+      responses:
+        '200':
+          description: response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+      x-swagger-router-controller: companyRouter
+    delete:
+      tags:
+        - delete company
+      operationId: deleteCompanyById
+      parameters:
+        - name: companyId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'User is deleted'
+        '400':
+          description: response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'No user found with this ID'
+        '404':
+          description: Company by id is not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Error of server'
+      x-swagger-router-controller: companyRouter
+
+  '/user':
+    get:
+      tags:
+        - Fetch all users
+      description: returns all users
+      operationId: getAllUsers
+      parameters:
+        - in: query
+          name: page
+          description: number of records to skip
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: limit
+          description: max number of records to return
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Fetch all the companies
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      tags:
+        - Create user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: Succesful created user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    x-swagger-router-controller: userRouter
+
+  '/registration':
+    post:
+      tags:
+        - registration
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: registration
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDcsImVtYWlsIjoiYWRtaW4wQGdtYWlsLmNvbSIsInJvbGUiOiJTVVBFUkFETUlOIiwiaWF0IjoxNzUwMDgzNzI3LCJleHAiOjE3NTAxNzAxMjd9.3Gat1ds1FfmJShPCEztSKYAAR8EjIk4_Mnp6aOK31R0'
+
+  '/login':
+    post:
+      tags:
+        - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: auth
+          content:
+            object:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDcsImVtYWlsIjoiYWRtaW4wQGdtYWlsLmNvbSIsInJvbGUiOiJTVVBFUkFETUlOIiwiaWF0IjoxNzUwMDgzNzI3LCJleHAiOjE3NTAxNzAxMjd9.3Gat1ds1FfmJShPCEztSKYAAR8EjIk4_Mnp6aOK31R0'
+
+  '/reset':
+    post:
+      tags:
+        - reset password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: reset
+          content:
+            object:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDcsImVtYWlsIjoiYWRtaW4wQGdtYWlsLmNvbSIsInJvbGUiOiJTVVBFUkFETUlOIiwiaWF0IjoxNzUwMDgzNzI3LCJleHAiOjE3NTAxNzAxMjd9.3Gat1ds1FfmJShPCEztSKYAAR8EjIk4_Mnp6aOK31R0'
+
+  '/auth':
+    post:
+      tags:
+        - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+      responses:
+        '200':
+          description: auth
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDcsImVtYWlsIjoiYWRtaW4wQGdtYWlsLmNvbSIsInJvbGUiOiJTVVBFUkFETUlOIiwiaWF0IjoxNzUwMDgzNzI3LCJleHAiOjE3NTAxNzAxMjd9.3Gat1ds1FfmJShPCEztSKYAAR8EjIk4_Mnp6aOK31R0'
+
+  '/user/{userId}':
+    get:
+      tags:
+        - get user
+      operationId: getUserById
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: Unique identifier of the user
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+      x-swagger-router-controller: userRouter
+
+    patch:
+      tags:
+        - update user
+      operationId: updateByUserId
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: Unique identifier of the user
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+      x-swagger-router-controller: userRouter
+
+    delete:
+      tags:
+        - delete user
+      operationId: deleteByUserId
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+
+      responses:
+        '200':
+          description: response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '400':
+          description: response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'User is not found'
+        '404':
+          description: User by id is not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Error of server'
+      x-swagger-router-controller: userRouter
+
+  '/role':
+    get:
+      tags:
+        - Roles
+      responses:
+        '200':
+          description: get roles
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+      x-swagger-router-controller: roleRouter
+components:
+  schemas:
+    Company:
+      type: object
+      required:
+        - id
+        - name
+        - description
+        - service
+        - capital
+        - img
+        - company_info
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        service:
+          type: string
+        capital:
+          type: integer
+          format: int64
+        img:
+          type: string
+        company_info:
+          $ref: '#/components/schemas/CompanyInfo'
+
+    CompanyInfo:
+      type: object
+      required: # 👈 если нужны обязательные поля внутри
+        - id
+        - pricePolitic1kv
+        - pricePolitic2kv
+        - pricePolitic3kv
+        - pricePolitic4kv
+      properties:
+        id:
+          type: integer
+        pricePolitic1kv:
+          type: string
+        pricePolitic2kv:
+          type: string
+        pricePolitic3kv:
+          type: string
+        pricePolitic4kv:
+          type: string
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          writeOnly: true
+        role:
+          $ref: '#/components/schemas/Role'
+        user_info:
+          $ref: '#/components/schemas/UserInfo'
+      required:
+        - id
+        - email
+        - password
+        - role
+        - user_info
+        -
+    UserInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        description:
+          type: string
+        img:
+          type: string
+
+    Role:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
