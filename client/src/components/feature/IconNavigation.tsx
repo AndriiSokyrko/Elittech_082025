@@ -8,6 +8,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import {useDispatch} from "react-redux";
 import type {AppDispatch} from "../../store/store.ts";
 import {setFlagFav} from "../../store/slices/flowerSlice.ts";
+import {setFlagPurchase} from "../../store/slices/purchaseSlice.ts";
 
 
 const IconNavigation:React.FC = ()  => {
@@ -16,6 +17,9 @@ const IconNavigation:React.FC = ()  => {
 const handleOnFav=()=>{
     dispatch(setFlagFav())
 }
+const handlePurchase=()=>{
+        dispatch(setFlagPurchase())
+    }
     return (
         <Box position="fixed" sx={{ bottom: 0, left: 0, right: 0 }}>
             <BottomNavigation
@@ -24,10 +28,11 @@ const handleOnFav=()=>{
                 onChange={(event, newValue) => {
                     setValue(newValue);
                     if(event.target.id==='favorits'){
-                        console.log('fav')}
+                        console.log('fav')
+                    }
                 }}
             >
-                <BottomNavigationAction label="Recents" icon={<RestoreIcon /> } name="recents" />
+                <BottomNavigationAction label="Recents" icon={<RestoreIcon /> } name="recents" onClick={handlePurchase}/>
                 <BottomNavigationAction label="Favorites" icon={<FavoriteIcon />} id="favorits" onClick={handleOnFav}/>
                 <BottomNavigationAction label="Nearby" icon={<LocationOnIcon />} name="nearby"/>
             </BottomNavigation>

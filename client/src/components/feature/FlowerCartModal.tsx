@@ -66,10 +66,10 @@ const FlowerCartModal: React.FC<CartModalProps> = ({open, onClose}) => {
               name: t.flower.name, quantity: t.quantity, price: t.flower.price,shopName:t.flower.shop?.name
           }
       })
-        const infoClient:Purchase= {userName:name,email,phone,address,totalPrice:totalAmount,orders:items }
+        const infoClient:Purchase= {userId:user.id,userName:name,email,phone,address,totalPrice:totalAmount,orders:items }
         dispatch(addPurchase(infoClient))
         dispatch(clearCart());
-        onClose(true)
+        onClose()
     };
 
     return (

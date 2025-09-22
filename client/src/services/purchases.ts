@@ -8,8 +8,8 @@ export const PurchaseService = {
         return data;
     },
 
-    async getUserPurchase(): Promise<Purchase[]> {
-        const {data} = await $host.post<Purchase[]>('/api/purchases/my');
+    async getPurchase(id:number): Promise<Purchase[]> {
+        const {data} = await $host.get<Purchase[]>(`/api/purchases/${id}`);
         if (!data) throw new Error('Ошибка при получении покупок');
         return data;
     }

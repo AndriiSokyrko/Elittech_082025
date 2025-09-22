@@ -7,6 +7,6 @@ const authMiddleware = require('../middleware/authMiddleware');
 router.post('/', purchaseController.addPurchase);
 
 // Получение покупок авторизованного пользователя
-router.get('/my', authMiddleware, purchaseController.getUserPurchases);
+router.get('/:id', purchaseController.getUserPurchases);
 
 module.exports = router;

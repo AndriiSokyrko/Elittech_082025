@@ -3,7 +3,6 @@ import {adminRoutes, publicRoutes} from "../../routes";
 import {Navigate, Route, Routes} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import type {AppDispatch, RootState} from "../../store/store";
-import {getFlights} from "../../store/slices/flightSlice.ts";
 
 interface AppRoute {
     path: string;
@@ -11,7 +10,6 @@ interface AppRoute {
 }
 
 const AppRouter: React.FC = () => {
-    const dispatch= useDispatch<AppDispatch>()
     const {isAuthenticated} = useSelector((state: RootState) => state.user);
     const routes = isAuthenticated ? adminRoutes : publicRoutes;
 

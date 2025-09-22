@@ -8,12 +8,17 @@ import AppRouter from "./components/core/AppRouter";
 import Box from "@mui/material/Box";
 import AccountModal from "./components/feature/AccountModal.tsx";
 import type {User} from "./types/user.ts";
+import PurchaseModal from "./components/feature/PurchaseModal.tsx";
+import {useDispatch, useSelector} from "react-redux";
+import type {AppDispatch, RootState} from "./store/store.ts";
+import {setFlagPurchase} from "./store/slices/purchaseSlice.ts";
 
 function App() {
+    const dispatch= useDispatch<AppDispatch>()
+    const {flagPurchase} = useSelector((state: RootState) => state.purchase);
+
     const [open, setOpen] = useState(false);
     const handleSave = (data: User) => {
-        // тут ти можеш відправити на бекенд FormData або JSON
-        // якщо є avatarFile — зазвичай відсилають multipart/form-data
         setOpen(false);
     };
     const handleAccount = (flag: boolean) => {
@@ -30,6 +35,7 @@ function App() {
             <AppRouter/>
             <Footer>
                 <IconNavigation/>
+                <PurchaseModal  open={flagPurchase?flagPurchase:false} onClose={() => dispatch(setFlagPurchase())}/>
             </Footer>
 
         </Box>

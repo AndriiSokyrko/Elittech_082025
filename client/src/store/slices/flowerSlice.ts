@@ -62,6 +62,7 @@ export const flowerSlice = createSlice({
         setFlagFav:(state)=>{
             state.flagFav= state.flagFav===false? true: false;
         },
+
         clearCurrentFlight: (state) => {
             state.current = null;
         },
