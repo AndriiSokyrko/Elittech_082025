@@ -99,7 +99,7 @@ export const FlowerCard: React.FC<FlowerCardProps> = ({ flower, onOpenDetails })
                     expand={expanded}
                     onClick={ ()=>onOpenDetails(flower.id)}
                     aria-expanded={expanded}
-                    aria-label="show more"
+                    aria-label="add to cart"
                 >
                     <ExpandMoreIcon />
                 </ExpandMore>

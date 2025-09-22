@@ -2,13 +2,13 @@ import React from 'react';
 import { Box } from "@mui/material";
 
 interface FooterProps {
-    Comp: React.ComponentType;
+    children?: React.ReactNode;
 }
 
-const Footer: React.FC<FooterProps> = ({ comp:Comp }) => {
+const Footer: React.FC<FooterProps> = ({ children }) => {
     return (
         <Box>
-            <Comp />
+            {children}
         </Box>
     );
 };

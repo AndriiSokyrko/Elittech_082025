@@ -45,7 +45,6 @@ const cartFlowerSlice = createSlice({
         addOrder: (state, action: PayloadAction<InfoOrder|null>) => {
             const info = { ...action.payload, quantity: action.payload.quantity || 1 };
             state.order = [...(state.order || []), info];
-            console.log(info)
             state.totalQuantity += info.quantity;
             state.totalAmount += info.quantity * info.flower.price;
 

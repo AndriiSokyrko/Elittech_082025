@@ -5,10 +5,17 @@ import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import RestoreIcon from '@mui/icons-material/Restore';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import {useDispatch} from "react-redux";
+import type {AppDispatch} from "../../store/store.ts";
+import {setFlagFav} from "../../store/slices/flowerSlice.ts";
 
-export default function IconNavigation():React.FC {
+
+const IconNavigation:React.FC = ()  => {
     const [value, setValue] = React.useState(0);
-
+    const dispatch= useDispatch<AppDispatch>()
+const handleOnFav=()=>{
+    dispatch(setFlagFav())
+}
     return (
         <Box position="fixed" sx={{ bottom: 0, left: 0, right: 0 }}>
             <BottomNavigation
@@ -21,10 +28,11 @@ export default function IconNavigation():React.FC {
                 }}
             >
                 <BottomNavigationAction label="Recents" icon={<RestoreIcon /> } name="recents" />
-                <BottomNavigationAction label="Favorites" icon={<FavoriteIcon />} id="favorits"/>
+                <BottomNavigationAction label="Favorites" icon={<FavoriteIcon />} id="favorits" onClick={handleOnFav}/>
                 <BottomNavigationAction label="Nearby" icon={<LocationOnIcon />} name="nearby"/>
             </BottomNavigation>
         </Box>
     );
 }
 
+export default  IconNavigation;

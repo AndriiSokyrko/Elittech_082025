@@ -31,6 +31,7 @@ interface DataState {
     itemsPerPage:number;
     currentSetFlowers:number;
     totalFlowers:number;
+    flagFav:boolean;
 }
 
 const initialState: DataState = {
@@ -44,7 +45,8 @@ const initialState: DataState = {
     current: null,
     itemsPerPage:4,
     currentSetFlowers:1,
-    totalFlowers:1
+    totalFlowers:1,
+    flagFav: false,
 };
 
 export const flowerSlice = createSlice({
@@ -56,6 +58,9 @@ export const flowerSlice = createSlice({
             state.favorite= [...state.favorite, fav]
             const temp:Flower[] = state.flowers.filter(f=>f.id!== action.payload)
             state.flowers=[fav, ...temp]
+        },
+        setFlagFav:(state)=>{
+            state.flagFav= state.flagFav===false? true: false;
         },
         clearCurrentFlight: (state) => {
             state.current = null;
@@ -128,5 +133,5 @@ export const flowerSlice = createSlice({
     }
 });
 
-export const {updateStateFlower,sortStateFlowersByPrice,sortStateFlowersByDate ,setFlav} = flowerSlice.actions;
+export const {updateStateFlower,sortStateFlowersByPrice,sortStateFlowersByDate ,setFlav,setFlagFav} = flowerSlice.actions;
 export default flowerSlice.reducer;

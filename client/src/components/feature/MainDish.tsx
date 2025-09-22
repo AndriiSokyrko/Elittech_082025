@@ -14,9 +14,9 @@ import {FlowerDetailsModal} from "./FlowerDetailsModal.tsx";
 import SortByDate from "./SortByDate.tsx";
 import {FlowerPagination} from "./FlowerPagination.tsx";
 
-const MainDish: React.FC = () => {
+const MainDish: React.FC = ({flowers, itemsPerPage,loading, error}) => {
     const dispatch = useDispatch<AppDispatch>();
-    const {flowers, itemsPerPage,loading, error} = useSelector((state: RootState) => state.flower);
+    // const {flowers, itemsPerPage,loading, error} = useSelector((state: RootState) => state.flower);
     const {showModalCart} = useSelector((state: RootState) => state.cart);
     const [selectedFlower, setSelectedFlower] = useState<Flower[] | null>(null);
     const [detailsOpen, setDetailsOpen] = useState(false);
