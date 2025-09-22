@@ -1,6 +1,5 @@
 import {
-    FLIGHTS_ROUTE,
-    ADMIN_ROUTE,
+    FLOWERS_ROUTE,
     LOGIN_ROUTE,
     REGISTRATION_ROUTE, ROOT_ROUTE
 } from "./utils/consts";
@@ -11,7 +10,7 @@ import Main from "./components/core/Main.tsx";
 export const adminRoutes = [
 
     {
-        path:FLIGHTS_ROUTE,
+        path:FLOWERS_ROUTE,
         Component: Main
     },
 

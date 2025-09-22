@@ -42,7 +42,7 @@ export const deleteUser = async (id) =>{
     const {data} = await $authHost.delete(`api/user/${id}`)
     return data
 }
-export const getUserById = async (id) => {
+export const getUserById = async (id:number) => {
     const {data} = await $authHost.get(`api/user/${id}`)
     return data
 }

@@ -21,48 +21,41 @@ function hasExtension(fileName) {
 }
 
 class UserController {
-
     async updateByUserId(req, res, next) {
-        let {id, email, role, description} = req.body
-        let fileName;
-        const user = await User.findOne({where: {id}});
+        let { id, email, address, phone, userName, description } = req.body;
+        const user = await User.findOne({
+            where: { id },
+            include: [{ model: UserInfo, as: 'userInfo' }]
+        });
 
         if (!user) {
-            return next(apiError.badRequest('No user found with this ID'))
+            return next(apiError.badRequest('No user found with this ID'));
+
         }
-        await user.update({email, role});
-        const userInfo = await UserInfo.findOne({where: {userId: user.id}})
-
-        if (description) await userInfo.update({description})
-
+        // обновляем инфу
+        await user.userInfo.update({ email, address, phone, name:userName, description });
         if (req.files) {
-            const {img} = req.files;
+            const { avatar } = req.files;
 
-            const filePath = path.resolve(__dirname, '..', 'static', img.name);
-            if (fs.existsSync(filePath)) {
-                await img.mv(filePath);
-            }
-            fileName = img.name
-            await userInfo.update({img: fileName});
+            const filePath = path.resolve(__dirname, '..', 'static', avatar.name);
+            await avatar.mv(filePath);
+            await user.userInfo.update({ avatarFile: avatar.name });
 
         }
-
         res.status(200).json(user);
-
     }
 
     async getByUserId(req, res, next) {
         const id = req.params.id;
-
         try {
-            const userWithInfo = await User.findOne({
+            const userInfo = await User.findOne({
                 where: {id},
-                include: [{model: UserInfo}]
+                include: [{model: UserInfo,as: 'userInfo'}]
             })
-            if (!userWithInfo) {
+            if (!userInfo) {
                 return next(apiError.badRequest('No user found with this ID'))
             }
-            res.status(200).json(userWithInfo);
+            res.status(200).json(userInfo);
         } catch (error) {
             return next(apiError.badRequest('Error  user:', error))
 
@@ -112,7 +105,7 @@ class UserController {
             return next(apiError.badRequest('No correct email or password'))
         }
         const candidate = await UserInfo.findOne({where: {email}})
-        if (candidate!==null) {
+        if (candidate !== null) {
             return next(apiError.badRequest('User with this email is already exist'))
         }
 
@@ -137,7 +130,7 @@ class UserController {
         if (!userInfo) {
             return next(apiError.badRequest('No userInfo found'))
         }
-        const user= await User.findOne({where: {id:userInfo.userId}})
+        const user = await User.findOne({where: {id: userInfo.userId}})
         if (!user) {
             return next(apiError.badRequest('No user found'))
         }
@@ -204,17 +197,17 @@ class UserController {
         }
         let fileName;
         if (req.files) {
-            const {img} = req.files;
-            const filePath = path.resolve(__dirname, '..', 'static', img.name);
+            const {avatarFile} = req.files;
+            const filePath = path.resolve(__dirname, '..', 'static', avatarFile.name);
             if (fs.existsSync(filePath)) {
-                await img.mv(filePath);
+                await avatarFile.mv(filePath);
             }
-            fileName = img.name
+            fileName = avatarFile.name
         }
 
         const hashPassword = await bcrypt.hash(password, 5)
         const user = await User.create({email, password: hashPassword, role})
-        await UserInfo.create({userId: user.id, description, img: fileName});
+        await UserInfo.create({userId: user.id, description, avatarFile: fileName});
 
 
         res.status(200).json(user);

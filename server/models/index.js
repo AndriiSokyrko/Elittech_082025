@@ -11,9 +11,9 @@ const Purchase = require('./Purchase')(sequelize, DataTypes);
 const PurchaseItem = require('./PurchaseItem')(sequelize, DataTypes);
 
 // Ассоциации
-[Category, Shop, Flower, Purchase,PurchaseItem].forEach(model => {
+[Category, Shop, Flower, Purchase,PurchaseItem, User,UserInfo, Role].forEach(model => {
   if (model.associate) {
-    model.associate({ Category, Shop, Flower, Purchase,PurchaseItem });
+    model.associate({ Category, Shop, Flower, Purchase,PurchaseItem,User,UserInfo,Role });
   }
 });
 

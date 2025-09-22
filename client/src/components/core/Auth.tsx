@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import {NavLink, useLocation, useNavigate} from "react-router-dom";
 import {LOGIN_ROUTE, REGISTRATION_ROUTE, ROOT_ROUTE} from "../../utils/consts";
-import { login, registration } from "../../services/userApi";
+import { login, registration } from "../../services/user";
 import { validateEmail } from "../../utils/common";
-import { Button, Card, Container, TextField, Typography, Stack, Alert } from "@mui/material";
+import { Button, Card, TextField, Typography, Stack, Alert } from "@mui/material";
 import { toast } from "react-toastify";
 import Box from "@mui/material/Box";
 

@@ -2,13 +2,16 @@ import React from 'react';
 import { Box } from "@mui/material";
 
 interface HeaderProps {
-    Comp: React.ComponentType;
+    // Comp: React.ComponentType;
+
+    children?: React.ReactNode;
 }
 
-const Header: React.FC<HeaderProps> = ({ comp:Comp, onOpen }) => {
+const Header: React.FC<HeaderProps> = ({ children }) => {
     return (
         <Box>
-            <Comp openCart={onOpen}/>
+            {/*<Comp openCart={onOpen}/>*/}
+            {children}
         </Box>
     );
 };

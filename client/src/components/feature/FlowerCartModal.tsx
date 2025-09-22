@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Modal,
     Box,
@@ -49,6 +49,7 @@ const FlowerCartModal: React.FC<CartModalProps> = ({open, onClose}) => {
     const [email, setEmail] = useState<string>('');
     const [phone, setPhone] = useState<string>('');
     const [address, setAddress] = useState<string>('');
+    const {user} = useSelector((state: RootState) => state.user);
 
     const handleClear = () => {
         dispatch(clearCart());
@@ -57,7 +58,14 @@ const FlowerCartModal: React.FC<CartModalProps> = ({open, onClose}) => {
     const handleDelete = (id: string) => {
         dispatch(removeOrder(id));
     };
-
+    useEffect(() => {
+        if(user?.id){
+            setName(user.name)
+            setEmail(user.email)
+            setPhone(user.phone)
+            setAddress(user.address)
+        }
+    }, []);
 
     const handleCheckout = () => {
       const items:PurchaseItem[] = orders.map(t=> {

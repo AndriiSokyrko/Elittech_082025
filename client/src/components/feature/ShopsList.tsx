@@ -1,12 +1,8 @@
-import React, {type ChangeEvent, useEffect, useState} from "react";
+import React, { useEffect, useState} from "react";
 import { List, ListItem, ListItemText, ListItemButton, Box } from "@mui/material";
-import {debounce} from "../../helper/debaunce.ts";
-import type {Flight} from "../../types/flight.ts";
-import {updateStateFlights} from "../../store/slices/flightSlice.ts";
 import {useDispatch, useSelector} from "react-redux";
 import type {AppDispatch, RootState} from "../../store/store.ts";
-import type {Shop} from "../../types/shop.ts";
-import {fetchFlowers, fetchShops, updateStateFlower} from "../../store/slices/flowerSlice.ts";
+import { fetchShops, updateStateFlower} from "../../store/slices/flowerSlice.ts";
 import type {Flower} from "../../types/flower.ts";
 
 const ShopsList: React.FC = () => {

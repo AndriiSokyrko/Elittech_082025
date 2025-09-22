@@ -64,8 +64,10 @@ const StyledInputBase = styled(InputBase)(({theme}) => ({
         },
     },
 }));
-
-export default function PrimarySearchAppBar() {
+interface PrimarySearchAppBarProps {
+    onAccount: () => void; // function prop
+}
+export default function PrimarySearchAppBar({onAccount}:PrimarySearchAppBarProps) {
     const navigate = useNavigate()
     const dispatch = useDispatch();
     const {totalAmount, totalQuantity} = useSelector((state: RootState) => state.cartFlower);
@@ -103,6 +105,7 @@ export default function PrimarySearchAppBar() {
 
     const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
+
     };
 
     const handleMobileMenuClose = () => {
@@ -113,6 +116,10 @@ export default function PrimarySearchAppBar() {
         setAnchorEl(null);
         handleMobileMenuClose();
     };
+    const handleModalAccountOpen=()=>{
+        onAccount(true)
+
+    }
     const handleExit = () => {
         localStorage.removeItem('token')
         dispatch(logout())
@@ -142,7 +149,7 @@ export default function PrimarySearchAppBar() {
             onClose={handleMenuClose}
         >
             <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+            <MenuItem onClick={handleModalAccountOpen}>My account</MenuItem>
             <MenuItem onClick={handleExit}>Exit</MenuItem>
         </Menu>
     );
@@ -234,7 +241,7 @@ export default function PrimarySearchAppBar() {
                     <Box sx={{flexGrow: 1}}/>
                     <Box sx={{display: {xs: 'none', md: 'flex'}}}>
                         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                            <Badge badgeContent={4} color="error">
+                            <Badge badgeContent={0} color="error">
                                 <MailIcon/>
                             </Badge>
                         </IconButton>

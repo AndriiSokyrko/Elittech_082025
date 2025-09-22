@@ -1,5 +1,4 @@
 import React from 'react';
-import ItemList from "./ItemList.tsx";
 import {Box} from "@mui/material";
 import type {Flight} from "../../types/flight.ts";
 import ShopsList from "./ShopsList.tsx";

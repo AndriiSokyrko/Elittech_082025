@@ -52,7 +52,7 @@ export const flowerSlice = createSlice({
     initialState,
     reducers: {
         setFlav:(state, action: PayloadAction<string>)=>{
-            let fav:Flower =state.flowers.find(f=>f.id===action.payload)
+            const fav:Flower =state.flowers.find(f=>f.id===action.payload)
             state.favorite= [...state.favorite, fav]
             const temp:Flower[] = state.flowers.filter(f=>f.id!== action.payload)
             state.flowers=[fav, ...temp]
