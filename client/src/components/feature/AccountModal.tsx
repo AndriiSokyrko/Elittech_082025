@@ -51,18 +51,18 @@ const AccountModal: React.FC<AccountModalProps> = ({
                                                        saveLabel = 'Save',
                                                        cancelLabel = 'Cancel',
                                                    }) => {
-    const [userName, setUserName] = useState<string>("");
-    const [email, setEmail] = useState<string>("");
-    const [phone, setPhone] = useState<string>("");
-    const [address, setAddress] = useState<string>("");
-    const [description, setDescription] = useState<string>("");
+    const {user} = useSelector((state: RootState) => state.user);
+    const [userName, setUserName] = useState<string>(user.name||"");
+    const [email, setEmail] = useState<string>(user.email||"");
+    const [phone, setPhone] = useState<string>(user.phone||"");
+    const [address, setAddress] = useState<string>(user.address||"");
+    const [description, setDescription] = useState<string>(user.description||"");
     const [avatarFile, setAvatarFile] = useState<File | null>(null);
-    const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+    const [avatarUrl, setAvatarUrl] = useState<string | null>(user.avatarFile||null);
     const [errors, setErrors] = useState<{ [k: string]: string }>({});
     const dispatch = useDispatch<AppDispatch>()
-    const {user} = useSelector((state: RootState) => state.user);
     useEffect(() => {
-        if (open  && user?.id) {
+        if (user?.id) {
             dispatch(getAccountById(user.id))
             setEmail(user.email?? "")
             setUserName(user.name?? "");
@@ -73,7 +73,7 @@ const AccountModal: React.FC<AccountModalProps> = ({
             setAvatarUrl(user.avatarFile ?? "");
             setErrors({});
         }
-    }, [open, user?.id]);
+    }, [user?.id]);
 
     useEffect(() => {
         if (!avatarFile) return;

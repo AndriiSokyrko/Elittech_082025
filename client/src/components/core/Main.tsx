@@ -4,15 +4,10 @@ import AppAside from "../feature/AppAside.tsx";
 import MainDish from "../feature/MainDish.tsx";
 import { useSelector } from "react-redux";
 import type {RootState} from "../../store/store.ts";
-import type {Flower} from "../../types/flower.ts";
 
 const TwoSectionsGrid: React.FC = () => {
     const {flowers, favorite,  itemsPerPage,loading, error,flagFav} = useSelector((state: RootState) => state.flower);
-    const [data, setData]=useState<Flower[]>([])
-    useEffect(() => {
-        if(flagFav) setData(favorite)
-        if(!flagFav) setData(flowers)
-    }, [flagFav]);
+
     return (
         <Box
             display="flex"
@@ -38,7 +33,7 @@ const TwoSectionsGrid: React.FC = () => {
                 justifyContent="center"
                 bgcolor="black"
             >
-                <MainDish flowers={data} itemsPerPage={itemsPerPage} loading={loading} error={error}/>
+                <MainDish flowers={flagFav?favorite:flowers} itemsPerPage={itemsPerPage} loading={loading} error={error}/>
 
             </Box>
         </Box>
