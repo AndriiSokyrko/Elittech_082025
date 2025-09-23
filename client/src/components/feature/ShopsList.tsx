@@ -15,6 +15,9 @@ const ShopsList: React.FC = () => {
         );
         dispatch(updateStateFlower(data));
     };
+    const handleClear =()=>{
+        dispatch(updateStateFlower(originFlowers.rows));
+    }
     useEffect(() => {
         dispatch(fetchShops());
     }, [dispatch]);
@@ -37,7 +40,23 @@ const ShopsList: React.FC = () => {
                             <ListItemText primary={item.name} />
                         </ListItemButton>
                     </ListItem>
+
                 ))}
+                <ListItem key={shops.rows.length} disablePadding>
+                    <ListItemButton
+                        selected={selectedIndex === shops.rows.length}
+                        onClick={() => handleClear()}
+                        sx={{
+                            "&:hover": {
+                                bgcolor: "primary.light",
+                                color: "white",
+                            },
+                            transition: "0.3s",
+                        }}
+                    >
+                        <ListItemText primary="Clear filter" />
+                    </ListItemButton>
+                </ListItem>
             </List>
         </Box>
     );

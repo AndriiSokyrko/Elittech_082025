@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ChangeEvent } from 'react';
+import React, {useState, useEffect, ChangeEvent, useMemo} from 'react';
 import {
     Modal,
     Box,
@@ -61,21 +61,21 @@ const AccountModal: React.FC<AccountModalProps> = ({
     const [avatarUrl, setAvatarUrl] = useState<string | null>(user?.avatarFile||null);
     const [errors, setErrors] = useState<{ [k: string]: string }>({});
     const dispatch = useDispatch<AppDispatch>()
-    useEffect(() => {
+    useMemo(() => {
         if (user?.id) {
-            dispatch(getAccountById(user.id))
-            setEmail(user.email?? "")
-            setUserName(user.name?? "");
-            setPhone(user.phone?? "");
-            setAddress(user.address?? "");
-            setDescription(user.description?? "");
-            setAvatarFile(avatarFile ?? null);
-            setAvatarUrl(user.avatarFile ?? "");
+            setEmail(user?.email|| "")
+            setUserName(user?.name|| "");
+            setPhone(user?.phone|| "");
+            setAddress(user?.address|| "");
+            setDescription(user?.description|| "");
+            setAvatarUrl(user.avatarFile || "");
             setErrors({});
         }
-    }, [user?.id]);
+    }, [user]);
 
     useEffect(() => {
+        dispatch(getAccountById(user.id))
+
         if (!avatarFile) return;
         const url = URL.createObjectURL(avatarFile);
         setAvatarUrl(url);
@@ -154,7 +154,7 @@ const AccountModal: React.FC<AccountModalProps> = ({
                         />
                         <TextField
                             label="Телефон"
-                            value={phone}
+                            value={ phone}
                             onChange={(e) => setPhone(e.target.value)}
                             error={!!errors.phone}
                             helperText={errors.phone}
@@ -163,7 +163,7 @@ const AccountModal: React.FC<AccountModalProps> = ({
                         />
                         <TextField
                             label="Адреса"
-                            value={address}
+                            value={ address}
                             onChange={(e) => setAddress(e.target.value)}
                             fullWidth
                             margin="dense"
@@ -172,7 +172,7 @@ const AccountModal: React.FC<AccountModalProps> = ({
                         />
                         <TextField
                             label="Description"
-                            value={description}
+                            value={ description}
                             onChange={(e) => setDescription(e.target.value)}
                             fullWidth
                             margin="dense"
@@ -184,7 +184,7 @@ const AccountModal: React.FC<AccountModalProps> = ({
                     {/* Права колонка — аватар та дії */}
                     <Box sx={{ width: 180, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
                         <Avatar
-                            src={avatarUrl ?? undefined}
+                            src={avatarUrl|| undefined}
                             alt={userName || 'avatar'}
                             sx={{ width: 96, height: 96 }}
                         />

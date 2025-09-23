@@ -52,7 +52,7 @@ const purchaseSlice = createSlice({
             })
             .addCase(addPurchase.fulfilled, (state, action) => {
                 state.loading = false;
-                state.items.push(action.payload);
+                state.purchases.push(action.payload);
             })
             .addCase(addPurchase.rejected, (state, action) => {
                 state.loading = false;

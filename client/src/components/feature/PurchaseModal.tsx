@@ -83,10 +83,10 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({ open, onClose }) => {
                             <Typography variant="subtitle2" gutterBottom>
                                 Данные покупателя:
                             </Typography>
-                            <Typography>Имя: {purchase.userName}</Typography>
-                            <Typography>Email: {purchase.email}</Typography>
-                            <Typography>Телефон: {purchase.phone}</Typography>
-                            <Typography>Адрес: {purchase.address}</Typography>
+                            <Typography>Имя: {user?.name}</Typography>
+                            <Typography>Email: {user?.email}</Typography>
+                            <Typography>Телефон: {user?.phone}</Typography>
+                            <Typography>Адрес: {user?.address}</Typography>
 
                             <Divider sx={{ my: 1 }} />
 

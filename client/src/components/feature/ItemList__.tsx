@@ -6,7 +6,7 @@ import {updateStateFlights} from "../../store/slices/flightSlice.ts";
 import {useDispatch, useSelector} from "react-redux";
 import type {RootState} from "../../store/store.ts";
 
-const ItemList: React.FC = () => {
+const ItemList__: React.FC = () => {
     const dispatch = useDispatch()
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
     const {list, originList} = useSelector((state: RootState) => state.flights);
@@ -53,4 +53,4 @@ const ItemList: React.FC = () => {
     );
 };
 
-export default ItemList;
+export default ItemList__;
