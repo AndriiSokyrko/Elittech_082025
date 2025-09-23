@@ -151,6 +151,7 @@ const AccountModal: React.FC<AccountModalProps> = ({
                             helperText={errors.email}
                             fullWidth
                             margin="dense"
+                            type="email"
                         />
                         <TextField
                             label="Телефон"
