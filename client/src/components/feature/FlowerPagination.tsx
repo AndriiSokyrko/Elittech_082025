@@ -7,10 +7,11 @@ import type {Flower} from "../../types/flower.ts";
 interface FlowerPaginationProps {
     page: number;
     onChange: (page: number) => void;
+    itemsPerPage:number;
 }
-export const FlowerPagination: React.FC<FlowerPaginationProps> = ({ page, onChange }) => {
-    const flowers: Flower[] = useSelector((state: RootState) => state.flower);
-    const {itemsPerPage, totalFlowers} = useSelector((state: RootState) => state.flower);
+export const FlowerPagination: React.FC<FlowerPaginationProps> = ({ page, onChange,itemsPerPage }) => {
+    // const flowers: Flower[] = useSelector((state: RootState) => state.flower);
+    const {totalFlowers} = useSelector((state: RootState) => state.flower);
     const totalPages = Math.ceil(totalFlowers / itemsPerPage);
 
     const handleChange = (_event: React.ChangeEvent<unknown>, value: number) => {

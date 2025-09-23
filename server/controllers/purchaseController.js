@@ -23,7 +23,7 @@ class PurchaseController {
                 ...item,
                 purchaseId: purchase.id
             }));
-            console.log(purchaseItems)
+
             await PurchaseItem.bulkCreate(purchaseItems);
             // 3. Загружаем вместе с orders для ответа
             const result = await Purchase.findOne({

@@ -125,7 +125,6 @@ class UserController {
 
     async login(req, res, next) {
         const {email, password} = req.body
-        console.log(req.body)
         const userInfo = await UserInfo.findOne({where: {email}})
         if (!userInfo) {
             return next(apiError.badRequest('No userInfo found'))

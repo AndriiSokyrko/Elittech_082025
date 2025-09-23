@@ -33,7 +33,7 @@ const TwoSectionsGrid: React.FC = () => {
                 justifyContent="center"
                 bgcolor="black"
             >
-                <MainDish flowers={flagFav?favorite:flowers} itemsPerPage={itemsPerPage} loading={loading} error={error}/>
+                <MainDish flowers={flagFav?favorite:flowers}   loading={loading} error={error}/>
 
             </Box>
         </Box>

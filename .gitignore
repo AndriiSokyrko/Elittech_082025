@@ -75,3 +75,4 @@ nodemon-debug.log
 
 # Custom
 uploads/
+.gitignore

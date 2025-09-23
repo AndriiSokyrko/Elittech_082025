@@ -51,7 +51,7 @@ export const FlowerCard: React.FC<FlowerCardProps> = ({ flower, onOpenDetails })
     return (
         <Card
             sx={{
-                width: "25%",
+                width: "100%",
                 height: "auto",           // фиксированная высота всей карточки
                 m: 1,
                 cursor: 'pointer',
@@ -81,7 +81,8 @@ export const FlowerCard: React.FC<FlowerCardProps> = ({ flower, onOpenDetails })
                     }}
                 />
             )}
-            <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+            <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column',
+                justifyContent: 'space-between' }}>
                 <Typography variant="body2" color="text.secondary" height="25%">
                     Магазин: {flower.shop?.name ?? 'Неизвестно'}
                 </Typography>

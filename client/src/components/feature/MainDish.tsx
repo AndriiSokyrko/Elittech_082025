@@ -14,9 +14,13 @@ import {FlowerDetailsModal} from "./FlowerDetailsModal.tsx";
 import SortByDate from "./SortByDate.tsx";
 import {FlowerPagination} from "./FlowerPagination.tsx";
 
-const MainDish: React.FC = ({flowers, itemsPerPage,loading, error}) => {
+interface MainDishProps {
+    flowers: Flower[];
+    loading:boolean;
+    error:string;
+}
+const MainDish: React.FC<MainDishProps> = ({flowers,loading, error}) => {
     const dispatch = useDispatch<AppDispatch>();
-    // const {flowers, itemsPerPage,loading, error} = useSelector((state: RootState) => state.flower);
     const {showModalCart} = useSelector((state: RootState) => state.cart);
     const [selectedFlower, setSelectedFlower] = useState<Flower[] | null>(null);
     const [detailsOpen, setDetailsOpen] = useState(false);
@@ -24,7 +28,14 @@ const MainDish: React.FC = ({flowers, itemsPerPage,loading, error}) => {
         dispatch(setStatusModalCart(false))
     }
     const [page, setPage] = useState(1);
-     const currentFlowers: Flower[] = flowers.slice(
+    const [itemsPerPage, setItemsPerPage] = useState(6);
+
+     const currentFlowers: Flower[] = flowers.length<=(page - 1) * itemsPerPage?
+         flowers.slice(
+             1,
+             itemsPerPage
+         )
+         :flowers.slice(
         (page - 1) * itemsPerPage,
         page * itemsPerPage
     );
@@ -42,9 +53,23 @@ const MainDish: React.FC = ({flowers, itemsPerPage,loading, error}) => {
     };
 
     useEffect(() => {
-        // dispatch(getFlights());
         dispatch(fetchFlowers());
     }, [dispatch]);
+
+    useEffect(() => {
+        const handleResize = () => {
+            const width = window.innerWidth;
+            if (width < 600) setItemsPerPage(1);
+            else if (width < 900) setItemsPerPage(2);
+            else if (width < 1200) setItemsPerPage(4);
+            else if (width < 1600) setItemsPerPage(6);
+            else setItemsPerPage(8);
+        };
+
+        handleResize();
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
     return (
         <Container style={{display: "flex", flexDirection: "column", height: "100vh", marginTop: "250px"}}>
             {loading &&
@@ -66,17 +91,41 @@ const MainDish: React.FC = ({flowers, itemsPerPage,loading, error}) => {
                 <SortByDate field={'createdAt'}/>
                 <SortByDate field={'price'}/>
             </Box>
-            <Box display="flex" justifyContent="end">
+            {/*<Box display="flex" justifyContent="end">*/}
 
-                {Array.isArray(currentFlowers) && currentFlowers.map((currentFlower) => (
-                    <FlowerCard key={currentFlower.id} flower={currentFlower} onOpenDetails={handleOpenDetails}/>
-                ))}
+            {/*    {Array.isArray(currentFlowers) && currentFlowers.map((currentFlower) => (*/}
+            {/*        <FlowerCard key={currentFlower.id} flower={currentFlower} onOpenDetails={handleOpenDetails}/>*/}
+            {/*    ))}*/}
 
+            {/*</Box>*/}
+            <Box
+                sx={{
+                    display: "grid",
+                    gridTemplateColumns: {
+                        xs: "repeat(1, 1fr)",
+                        sm: "repeat(2, 1fr)",
+                        md: `repeat(${itemsPerPage}, 1fr)`,
+                        lg: `repeat(${itemsPerPage}, 1fr)`,
+                    },
+                    gap: 3,
+                    mt: 2,
+                }}
+            >
+                {Array.isArray(currentFlowers) &&
+                    currentFlowers.map((currentFlower) => (
+                        <FlowerCard
+                            key={currentFlower.id}
+                            flower={currentFlower}
+                            onOpenDetails={handleOpenDetails}
+                        />
+                    ))}
             </Box>
+
 
             <FlowerPagination
                 page={page}
                 onChange={handlePageChange}
+                itemsPerPage={itemsPerPage}
             />
         </Container>
     )
