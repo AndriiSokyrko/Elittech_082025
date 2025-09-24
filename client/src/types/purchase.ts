@@ -13,6 +13,6 @@ export interface Purchase {
     phone: string;
     address: string;
     totalPrice: number;
-    orders: PurchaseItem[];
+    purchases: PurchaseItem[];
 
 }

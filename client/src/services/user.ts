@@ -1,30 +1,32 @@
 import {$authHost, $host} from "./index.js";
 import {jwtDecode } from "jwt-decode";
+import type {Token} from "../types/user.ts";
 
-export const registration = async (email, password) => {
-    const {data} = await $host.post('api/user/registration', {email, password})
-    localStorage.setItem('token', data.token)
-    return jwtDecode(data.token)
-}
-export const resetPassword = async (email, password) => {
-    const {data} = await $authHost.patch('api/user/reset', {email, password})
+export const registration = async (payload: { email:string, password:string }) => {
+    const {data} = await $host.post('api/user/registration',payload)
     localStorage.setItem('token', data.token)
     return jwtDecode(data.token)
 }
 
-export const login = async (email, password) => {
-    const {data} = await $host.post('api/user/login', {email, password})
+export const login = async (payload: { email:string, password:string }):Promise<Token> => {
+    const {data} = await $host.post('api/user/login', payload)
     localStorage.setItem('token', data.token)
     return jwtDecode(data.token)
 }
 
-export const check = async (token) => {
+export const resetPassword = async (payload: { email:string, password:string }) => {
+    const {data} = await $authHost.patch('api/user/reset', payload)
+    localStorage.setItem('token', data.token)
+    return jwtDecode(data.token)
+}
+
+export const check = async (token:string) => {
     const {data} = await $authHost.post('api/user/auth',{token})
     localStorage.setItem('token', data.token)
     return jwtDecode(data.token)
 }
-export const checkPassword = async (password, email) => {
-    const {data} = await $authHost.post('api/user/check',{password, email})
+export const checkPassword = async  (payload: { email:string, password:string }) => {
+    const {data} = await $authHost.post('api/user/check',payload)
     return jwtDecode(data.token)
 }
 
@@ -34,11 +36,11 @@ export const createAdmin = async (user) =>{
     return data
 }
 
-export const getUsers = async (page, limit) =>{
-    const {data} = await $authHost.get('api/user/',{params: {page, limit}})
+export const getUsers = async (payload:{page:number, limit:number}) =>{
+    const {data} = await $authHost.get('api/user/',{params: payload})
     return data
 }
-export const deleteUser = async (id) =>{
+export const deleteUser = async (id:number) =>{
     const {data} = await $authHost.delete(`api/user/${id}`)
     return data
 }
@@ -46,9 +48,8 @@ export const getUserById = async (id:number) => {
     const {data} = await $authHost.get(`api/user/${id}`)
     return data
 }
-export const updateUser = async (formData) => {
-
-    const {data} = await $authHost.patch(`api/user/update`, formData,
+export const updateUser = async (formData:FormData) => {
+    const {data} = await $authHost.patch(`api/user/update/`, formData,
          {
             headers: {
                 'Content-Type': 'multipart/form-data',

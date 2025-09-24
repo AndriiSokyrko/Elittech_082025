@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     Purchase.associate = function(models) {
-        Purchase.hasMany(models.PurchaseItem, { foreignKey: 'purchaseId', as: 'orders' });
+        Purchase.hasMany(models.PurchaseItem, { foreignKey: 'purchaseId', as: 'purchases' });
         Purchase.belongsTo(models.User, { foreignKey: 'userId', as: 'user' });
     };
 

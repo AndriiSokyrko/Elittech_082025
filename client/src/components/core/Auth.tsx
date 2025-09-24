@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {NavLink, useLocation, useNavigate} from "react-router-dom";
 import {LOGIN_ROUTE, REGISTRATION_ROUTE, ROOT_ROUTE} from "../../utils/consts";
-import { login, registration } from "../../services/user";
+import {login, registration} from "../../services/user";
 import { validateEmail } from "../../utils/common";
 import { Button, Card, TextField, Typography, Stack, Alert } from "@mui/material";
 import { toast } from "react-toastify";
@@ -11,7 +11,6 @@ const Auth = () => {
     const navigate= useNavigate()
     const location = useLocation();
     const isLogin = location.pathname === LOGIN_ROUTE;
-
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isEmailValid, setIsEmailValid] = useState(true);
@@ -21,10 +20,10 @@ const Auth = () => {
         setError("");
         try {
             if (isLogin) {
-                await login(email, password);
-                toast.success("Успешный вход!");
+                const token = await login({email, password});
+                if (token) toast.success("Успешный вход!");
             } else {
-                const token = await registration(email, password);
+                const token = await registration({email, password});
                 if (token) toast.success("Успешная регистрация!");
             }
             navigate(ROOT_ROUTE);

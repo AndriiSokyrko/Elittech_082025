@@ -35,7 +35,9 @@ function App() {
             <AppRouter/>
             <Footer>
                 <IconNavigation/>
-                <PurchaseModal  open={flagPurchase?flagPurchase:false} onClose={() => dispatch(setFlagPurchase())}/>
+                <PurchaseModal  open={flagPurchase?flagPurchase:false} onClose={() => dispatch(setFlagPurchase())}>
+                    <AppRouter/>
+                </PurchaseModal>
             </Footer>
 
         </Box>

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {
     Modal,
     Box,
@@ -21,6 +21,7 @@ import type {User} from "../../types/user.ts";
 import {addPurchase} from "../../store/slices/purchaseSlice.ts";
 import type {Purchase, PurchaseItem} from "../../types/purchase.ts";
 import {getUserById} from "../../services/user.ts";
+import {updateAccount} from "../../store/slices/authSlice.ts";
 
 interface CartModalProps {
     open: boolean;
@@ -45,13 +46,17 @@ const FlowerCartModal: React.FC<CartModalProps> = ({open, onClose}) => {
     const dispatch = useDispatch();
     const orders: InfoOrder[] = useSelector((state: RootState) => state.cartFlower.order);
     const totalAmount = useSelector((state: RootState) => state.cartFlower.totalAmount);
-
     const {user} = useSelector((state: RootState) => state.user);
-    const [name, setName] = useState<string>( user.name||"");
-    const [email, setEmail] = useState<string>( user.email||"");
-    const [phone, setPhone] = useState<string>( user.phone||"");
-    const [address, setAddress] = useState<string>( user.address||"");
-
+    const [name, setName] = useState<string>("");
+    const [email, setEmail] = useState<string>(user.email);
+    const [phone, setPhone] = useState<string>( "");
+    const [address, setAddress] = useState<string>("");
+    useMemo(() => {
+        setName(user.userInfo?.name)
+        setEmail(user?.email)
+        setPhone(user.userInfo?.phone)
+        setAddress(user.userInfo?.address)
+    }, [user, user.userInfo]);
     const handleClear = () => {
         dispatch(clearCart());
     };
@@ -61,13 +66,30 @@ const FlowerCartModal: React.FC<CartModalProps> = ({open, onClose}) => {
     };
 
     const handleCheckout = () => {
-      const items:PurchaseItem[] = orders.map(t=> {
-          return {
-              name: t.flower.name, quantity: t.quantity, price: t.flower.price,shopName:t.flower.shop?.name
-          }
-      })
-        const infoClient:Purchase= {userId:user.id,userName:name,email,phone,address,totalPrice:totalAmount,orders:items }
+        if (!orders) return
+        const items: PurchaseItem[] = orders.map(t => {
+            return {
+                name: t.flower.name, quantity: t.quantity, price: t.flower.price, shopName: t.flower.shop?.name
+            }
+        })
+        const infoClient: Purchase = {
+            userId: user.id,
+            userName: name,
+            email,
+            phone,
+            address,
+            totalPrice: totalAmount,
+            purchases: items
+        }
         dispatch(addPurchase(infoClient))
+        const formData = new FormData();
+        formData.append("id", user.id);
+        formData.append("userName", name);
+        formData.append("email", email);
+        formData.append("phone", phone);
+        formData.append("address", address);
+        formData.append("description", "");
+        dispatch(updateAccount(formData));
         dispatch(clearCart());
         onClose()
     };
@@ -95,28 +117,28 @@ const FlowerCartModal: React.FC<CartModalProps> = ({open, onClose}) => {
                             <Typography variant="subtitle1" sx={{fontWeight: 'bold'}}>Данные покупателя</Typography>
                             <TextField
                                 label="Имя"
-                                value={user.name}
+                                value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 fullWidth
                                 size="small"
                             />
                             <TextField
                                 label="Email"
-                                value={user.email}
+                                value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 fullWidth
                                 size="small"
                             />
                             <TextField
                                 label="Телефон"
-                                value={user.phone}
+                                value={phone}
                                 onChange={(e) => setPhone(e.target.value)}
                                 fullWidth
                                 size="small"
                             />
                             <TextField
                                 label="Адрес"
-                                value={user.address}
+                                value={address}
                                 onChange={(e) => setAddress(e.target.value)}
                                 fullWidth
                                 size="small"

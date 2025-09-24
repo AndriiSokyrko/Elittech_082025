@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
         quantity: { type: DataTypes.INTEGER, allowNull: false },
         price: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
         shopName: { type: DataTypes.STRING, allowNull: true },
-        purchaseId: { type: DataTypes.INTEGER }
+        purchaseId: { type: DataTypes.INTEGER,allowNull:false }
     }, {
         tableName: 'PurchaseItems',
         timestamps: true

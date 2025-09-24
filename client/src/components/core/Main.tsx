@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import type {RootState} from "../../store/store.ts";
 
 const TwoSectionsGrid: React.FC = () => {
-    const {flowers, favorite,  itemsPerPage,loading, error,flagFav} = useSelector((state: RootState) => state.flower);
+    const {flowers, favorite, loading, error,flagFav} = useSelector((state: RootState) => state.flower);
 
     return (
         <Box

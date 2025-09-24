@@ -20,14 +20,15 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CloseIcon from '@mui/icons-material/Close';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../../store/store';
-import {fetchPurchases, setFlagPurchase} from '../../store/slices/purchaseSlice';
+import {fetchPurchases} from '../../store/slices/purchaseSlice';
 
 interface PurchaseModalProps {
     open: boolean;
     onClose: () => void;
+    children: React.ReactNode;
 }
 
-const PurchaseModal: React.FC<PurchaseModalProps> = ({ open, onClose }) => {
+const PurchaseModal: React.FC<PurchaseModalProps> = ({ open, onClose,children }) => {
     const dispatch = useDispatch<AppDispatch>();
     const { purchases, loading, error } = useSelector((state: RootState) => state.purchase);
     const {user} = useSelector((state: RootState) => state.user);
@@ -39,8 +40,8 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({ open, onClose }) => {
             dispatch(fetchPurchases(user.id));
         }
     }, [dispatch, open]);
-
     return (
+
         <Dialog
             open={open}
             onClose={handleClose}
@@ -83,10 +84,10 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({ open, onClose }) => {
                             <Typography variant="subtitle2" gutterBottom>
                                 Данные покупателя:
                             </Typography>
-                            <Typography>Имя: {user?.name}</Typography>
+                            <Typography>Имя: {user?.userInfo?.name}</Typography>
                             <Typography>Email: {user?.email}</Typography>
-                            <Typography>Телефон: {user?.phone}</Typography>
-                            <Typography>Адрес: {user?.address}</Typography>
+                            <Typography>Телефон: {user?.userInfo?.phone}</Typography>
+                            <Typography>Адрес: {user?.userInfo?.address}</Typography>
 
                             <Divider sx={{ my: 1 }} />
 
@@ -94,7 +95,7 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({ open, onClose }) => {
                                 Товары:
                             </Typography>
                             <List dense>
-                                {purchase.orders?.map((item) => (
+                                {purchase.purchases?.map((item) => (
                                     <ListItem key={item.id}>
                                         <ListItemText
                                             primary={`${item.name} x${item.quantity}`}

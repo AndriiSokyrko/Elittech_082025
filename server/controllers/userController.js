@@ -1,6 +1,6 @@
 const apiError = require('../error/apiErrors')
 const bcrypt = require('bcrypt')
-const {User, UserInfo} = require('../models')
+const {User, UserInfo, Role} = require('../models')
 const jwt = require('jsonwebtoken')
 const path = require("path")
 const uuid = require('uuid')
@@ -22,40 +22,48 @@ function hasExtension(fileName) {
 
 class UserController {
     async updateByUserId(req, res, next) {
-        let { id, email, address, phone, userName, description } = req.body;
-        const user = await User.findOne({
-            where: { id },
-            include: [{ model: UserInfo, as: 'userInfo' }]
-        });
+        let { id, address, phone, userName, description } = req.body;
+        try {
+            const user = await User.findOne({
+                where: { id },
+                include: [{ model: UserInfo, as: 'userInfo' }]
+            });
 
-        if (!user) {
-            return next(apiError.badRequest('No user found with this ID'));
+            if (!user) {
+                return next(apiError.badRequest('No user found with this ID'));
+            }
 
+            // Обновляем UserInfo
+            let userInfo;
+            if (user.userInfo) {
+                userInfo = await user.userInfo.update({ address, phone, name: userName, description });
+            } else {
+                userInfo = await UserInfo.create({ address, phone, name: userName, description, userId: id });
+            }
+            // Обработка аватара
+            if (req.files?.avatar) {
+                const { avatar } = req.files;
+                const filePath = path.resolve(__dirname, '..', 'static', avatar.name);
+                await avatar.mv(filePath);
+                await userInfo.update({ avatarFile: avatar.name });
+            }
+
+            res.status(200).json(user);
+        } catch (error) {
+            return next(apiError.badRequest('Error updating user', error));
         }
-        // обновляем инфу
-        await user.userInfo.update({ email, address, phone, name:userName, description });
-        if (req.files) {
-            const { avatar } = req.files;
-
-            const filePath = path.resolve(__dirname, '..', 'static', avatar.name);
-            await avatar.mv(filePath);
-            await user.userInfo.update({ avatarFile: avatar.name });
-
-        }
-        res.status(200).json(user);
     }
+
 
     async getByUserId(req, res, next) {
         const id = req.params.id;
         try {
-            const userInfo = await User.findOne({
+            const user = await User.findOne({
                 where: {id},
                 include: [{model: UserInfo,as: 'userInfo'}]
             })
-            if (!userInfo) {
-                return next(apiError.badRequest('No user found with this ID'))
-            }
-            res.status(200).json(userInfo);
+
+            res.status(200).json(user);
         } catch (error) {
             return next(apiError.badRequest('Error  user:', error))
 
@@ -104,19 +112,21 @@ class UserController {
         if (!email || !password) {
             return next(apiError.badRequest('No correct email or password'))
         }
-        const candidate = await UserInfo.findOne({where: {email}})
+        const candidate = await User.findOne({where: {email}})
+
         if (candidate !== null) {
             return next(apiError.badRequest('User with this email is already exist'))
         }
-
+        //if first registration and no other users- created SUPERADMIN
         const countUser = await User.count()
+        let role = await Role.findOne({where:{name:'USER'}})
         const hashPassword = await bcrypt.hash(password, 5)
-        let user = await User.create({email, password: hashPassword})
+        let user = await User.create({email, password: hashPassword, role:role.name, roleId: role.id })
+
         if (!countUser) {
             user = await user.update({email, password: hashPassword, role: 'SUPERADMIN'})
 
         }
-        await UserInfo.create({userId: user.id, email});
         const token = generateJwt(user.id, user.email, user.role)
 
         return res.json({token})
@@ -125,21 +135,18 @@ class UserController {
 
     async login(req, res, next) {
         const {email, password} = req.body
-        const userInfo = await UserInfo.findOne({where: {email}})
-        if (!userInfo) {
-            return next(apiError.badRequest('No userInfo found'))
+        const user  = await User.findOne({where: {email}})
+        if (!user ) {
+            return next(apiError.badRequest('No user  found'))
         }
-        const user = await User.findOne({where: {id: userInfo.userId}})
-        if (!user) {
-            return next(apiError.badRequest('No user found'))
-        }
+
         let comparePassword = bcrypt.compareSync(password, user.password)
 
         if (!comparePassword) {
             next(apiError.badRequest('No correct password'))
         }
 
-        const token = generateJwt(user.id, userInfo.email, user.role)
+        const token = generateJwt(user.id, user.email, user.role)
         return res.status(200).json({token})
     }
 

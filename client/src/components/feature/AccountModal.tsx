@@ -52,35 +52,35 @@ const AccountModal: React.FC<AccountModalProps> = ({
                                                        cancelLabel = 'Cancel',
                                                    }) => {
     const {user} = useSelector((state: RootState) => state.user);
-    const [userName, setUserName] = useState<string>(user?.name||null);
+    const [userName, setUserName] = useState<string>(user?.userInfo?.name||"");
     const [email, setEmail] = useState<string>(user?.email||"");
-    const [phone, setPhone] = useState<string>(user?.phone||"");
-    const [address, setAddress] = useState<string>(user?.address||"");
-    const [description, setDescription] = useState<string>(user?.description||"");
+    const [phone, setPhone] = useState<string>(user?.userInfo?.phone||"");
+    const [address, setAddress] = useState<string>(user?.userInfo?.address||"");
+    const [description, setDescription] = useState<string>(user?.userInfo?.description||"");
     const [avatarFile, setAvatarFile] = useState<File | null>(null);
-    const [avatarUrl, setAvatarUrl] = useState<string | null>(user?.avatarFile||null);
+    const [avatarUrl, setAvatarUrl] = useState<string | null>(user?.userInfo?.avatarFile||null);
     const [errors, setErrors] = useState<{ [k: string]: string }>({});
     const dispatch = useDispatch<AppDispatch>()
-    useMemo(() => {
+    useEffect(() => {
         if (user?.id) {
-            setEmail(user?.email|| "")
-            setUserName(user?.name|| "");
-            setPhone(user?.phone|| "");
-            setAddress(user?.address|| "");
-            setDescription(user?.description|| "");
-            setAvatarUrl(user.avatarFile || "");
+            setEmail(user.email|| "")
+            setUserName(user.userInfo?.name|| "");
+            setPhone(user.userInfo?.phone|| "");
+            setAddress(user.userInfo?.address|| "");
+            setDescription(user.userInfo?.description|| "");
+            setAvatarUrl(user.userInfo?.avatarFile || "");
             setErrors({});
         }
     }, [user]);
 
     useEffect(() => {
-        dispatch(getAccountById(user.id))
+        // dispatch(getAccountById(user.id))
 
         if (!avatarFile) return;
         const url = URL.createObjectURL(avatarFile);
         setAvatarUrl(url);
         return () => URL.revokeObjectURL(url);
-    }, [avatarFile]);
+    }, []);
 
     const validate = (): boolean => {
         const e: { [k: string]: string } = {};
@@ -94,6 +94,8 @@ const AccountModal: React.FC<AccountModalProps> = ({
 
     const handleAvatarChange = (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files && e.target.files[0];
+        const imageUrl = URL.createObjectURL(file);
+        setAvatarUrl(imageUrl)
         if (file) {
             setAvatarFile(file);
         }
@@ -101,7 +103,6 @@ const AccountModal: React.FC<AccountModalProps> = ({
 
     const handleSave = () => {
         if (!validate()) return;
-
         const formData = new FormData();
         if (user.id) formData.append("id", user.id);
         if (userName) formData.append("userName", userName);
@@ -111,7 +112,7 @@ const AccountModal: React.FC<AccountModalProps> = ({
         if (description) formData.append("description", description);
         if (avatarFile) formData.append("avatar", avatarFile);
         dispatch(updateAccount(formData));
-        // onClose()
+        onClose()
     };
 
     const handleClearAvatar = () => {

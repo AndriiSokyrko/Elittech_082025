@@ -4,9 +4,8 @@ class PurchaseController {
     // Добавить новую покупку
     async addPurchase(req, res, next) {
         try {
-            const {userId,userName, email, phone, address, totalPrice, orders} = req.body;
-
-            if (!orders || !Array.isArray(orders) || orders.length === 0) {
+            const {userId,userName, email, phone, address, totalPrice, purchases} = req.body;
+            if (!purchases || !Array.isArray(purchases) || purchases.length === 0) {
                 return res.status(400).json({message: 'Покупка должна содержать хотя бы один элемент'});
             }
 
@@ -19,7 +18,7 @@ class PurchaseController {
                 totalPrice,
             });
             // 2. Создаём связанные элементы в таблице PurchaseItems
-            const purchaseItems = orders.map(item => ({
+            const purchaseItems = purchases.map(item => ({
                 ...item,
                 purchaseId: purchase.id
             }));
@@ -46,7 +45,7 @@ class PurchaseController {
 
             const purchases = await Purchase.findAll({
                 where: {userId},
-                include: [{model: PurchaseItem, as: 'orders'}],
+                include: [{model: PurchaseItem, as: 'purchases'}],
                 order: [['createdAt', 'DESC']]
             });
 
