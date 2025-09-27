@@ -1,8 +1,5 @@
-// src/store/cartSlice.ts
 import {createSlice} from '@reduxjs/toolkit';
 import type {PayloadAction} from '@reduxjs/toolkit';
-import type {Flight, InfoSeat, InfoTicket} from "../../types/flight.ts";
-import {act} from "react";
 import type {InfoOrder} from "../../types/flower.ts";
 
 interface CartFlowerState {

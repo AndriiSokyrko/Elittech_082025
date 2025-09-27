@@ -1,4 +1,3 @@
-import type {Flower} from "./flower.ts";
 
 export interface Shop {
     id: number;

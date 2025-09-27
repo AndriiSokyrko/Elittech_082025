@@ -3,7 +3,6 @@ const router = new Router();
 const flowerController = require('../controllers/flowerController');
 
 // Получить все магазины
-router.get('/shops', flowerController.getShops);
 
 // Получить все категории
 router.get('/categories', flowerController.getCategories);

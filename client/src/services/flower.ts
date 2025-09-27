@@ -18,9 +18,6 @@ export const FlowerService = {
         return data;
     },
 
-    async fetchShops(): Promise<InfoShop> {
-        const {data} = await $host.get<InfoShop>('/api/flowers/shops');
-        return data
-    }
+    
 
 };

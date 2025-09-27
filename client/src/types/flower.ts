@@ -2,7 +2,7 @@ import type { Category } from './Category';
 import type { Shop } from './Shop';
 
 export interface Flower {
-    id: string;
+    id: number;
     name: string;
     price: number;
     imageUrl: string;

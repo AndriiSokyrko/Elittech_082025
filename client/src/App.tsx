@@ -1,4 +1,4 @@
-import './App.css';
+import './App.module.css';
 import React, {useState} from 'react';
 import AppBar from './components/feature/AppBar';
 import Header from './components/share/Header';

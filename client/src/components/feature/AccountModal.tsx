@@ -12,7 +12,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import {useDispatch, useSelector} from "react-redux";
 import type {AppDispatch, RootState} from "../../store/store.ts";
-import {getAccountById, updateAccount} from "../../store/slices/authSlice.ts";
+import { updateAccount} from "../../store/slices/authSlice.ts";
 
 export type AccountData = {
     id?:string;

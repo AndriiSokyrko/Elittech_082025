@@ -14,10 +14,6 @@ export const fetchCategories = createAsyncThunk('data/fetchCategories', async ()
     return res;
 });
 
-export const fetchShops = createAsyncThunk('data/fetchShops', async () => {
-    const res:InfoShop = await FlowerService.fetchShops();
-    return res;
-});
 
 interface DataState {
     flowers: Flower[];
@@ -118,19 +114,7 @@ export const flowerSlice = createSlice({
             state.error = action.error.message || 'Ошибка при загрузке категорий';
         });
 
-        // Shops
-        builder.addCase(fetchShops.pending, (state) => {
-            state.loading = true;
-            state.error = null;
-        });
-        builder.addCase(fetchShops.fulfilled, (state, action: PayloadAction<InfoShop>) => {
-            state.loading = false;
-            state.shops = action.payload;
-        });
-        builder.addCase(fetchShops.rejected, (state, action) => {
-            state.loading = false;
-            state.error = action.error.message || 'Ошибка при загрузке магазинов';
-        });
+
     }
 });
 

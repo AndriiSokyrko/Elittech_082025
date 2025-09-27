@@ -1,4 +1,6 @@
-const {Shop, Category, Flower} = require('../models');
+const {Shop, Category, Flower, User} = require('../models');
+const {Mode} = require("fs");
+const {Model} = require("sequelize");
 
 class FlowerController {
     async getFlowers(req, res, next) {
@@ -24,15 +26,54 @@ class FlowerController {
         }
     }
 
-    async getShops(req, res, next) {
+    async addFlower(req, res, next) {
+        const {name, address, phone}= req.body
         try {
-            const shops = await Shop.findAndCountAll();
-            res.json(shops);
+            let flower = await Flower.create({name, address, phone})
+
+            res.status(200).json(flower);
+        } catch (e) {
+            next(e);
+        }
+    }
+    async getFlowerById(req, res, next) {
+        const id= req.params.id
+        try {
+            let flower  = await flower.findOne({where:{id}})
+
+            res.status(200).json(flower );
+        } catch (e) {
+            next(e);
+        }
+    }
+    async updateFlowerById(req, res, next) {
+        const { id, name, address, phone } = req.body;
+
+        try {
+            const flowerId = Number(id);
+            const flower = await Flower.findOne({ where: { id: shopId } });
+            if (!flower) {
+                return res.status(404).json({ message: "flower not found" });
+            }
+            await flower.update({ name, address, phone });
+            res.status(200).json(flower);
         } catch (e) {
             next(e);
         }
     }
 
+    async deleteFlowerById(req, res, next) {
+        const id= req.params.id
+        try {
+            let flower  = await Flower.destroy({where:{id}})
+            if (!flower) {
+                return res.status(404).json({ message: "flower not found" });
+            }
+            res.status(200).json({message:"Ok", id});
+        } catch (e) {
+            next(e);
+        }
+    }
     async getCategories(req, res, next) {
         try {
             const categories = await Category.findAndCountAll();

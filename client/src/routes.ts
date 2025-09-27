@@ -1,11 +1,12 @@
 import {
     FLOWERS_ROUTE,
     LOGIN_ROUTE,
-    REGISTRATION_ROUTE, ROOT_ROUTE
+    REGISTRATION_ROUTE, ROOT_ROUTE, SHOPLIST_ROUTE
 } from "./utils/consts";
 import Auth from "./components/core/Auth";
 import AppRoot from "./components/core/AppRoot";
 import Main from "./components/core/Main.tsx";
+import ShopsListEdit from "./components/feature/ShopsListEdit.tsx";
 
 export const adminRoutes = [
 
@@ -13,7 +14,10 @@ export const adminRoutes = [
         path:FLOWERS_ROUTE,
         Component: Main
     },
-
+    {
+        path: SHOPLIST_ROUTE,
+        Component: ShopsListEdit
+    },
 ]
 export const publicRoutes = [
     {
@@ -24,6 +28,7 @@ export const publicRoutes = [
         path: LOGIN_ROUTE,
         Component: Auth
     },
+
     {
         path: REGISTRATION_ROUTE,
         Component: Auth
