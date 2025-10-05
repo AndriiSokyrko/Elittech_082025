@@ -8,14 +8,14 @@ module.exports = (sequelize, DataTypes) => {
     shopId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: { model: 'Shop', key: 'shopId' },
+      // references: { model: 'Shop', key: 'shopId' },
       onDelete: 'CASCADE'
     },
     categoryId: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      references: { model: 'Category', key: 'categoryId' },
-      onDelete: 'SET NULL'
+      allowNull: false,
+      // references: { model: 'Category', key: 'categoryId' },
+      onDelete: 'CASCADE'
     }
   }, {});
 

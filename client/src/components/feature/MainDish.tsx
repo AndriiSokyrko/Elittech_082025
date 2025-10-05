@@ -1,10 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import FlowerCartModal from "../feature/FlowerCartModal";
 import {Loader} from "../share/Loader";
 import ErrorDisplay from "../share/ErrorDisplay";
-import {useDispatch, useSelector} from "react-redux";
-import type {AppDispatch, RootState} from "../../store/store";
-import {setStatusModalCart} from "../../store/slices/cartSlice";
+import {useDispatch} from "react-redux";
+import type {AppDispatch} from "../../store/store";
 import Box from "@mui/material/Box";
 import {Container} from "@mui/material";
 import {fetchFlowers} from "../../store/slices/flowerSlice.ts";
@@ -21,12 +19,8 @@ interface MainDishProps {
 }
 const MainDish: React.FC<MainDishProps> = ({flowers,loading, error}) => {
     const dispatch = useDispatch<AppDispatch>();
-    const {showModalCart} = useSelector((state: RootState) => state.cart);
     const [selectedFlower, setSelectedFlower] = useState<Flower[] | null>(null);
     const [detailsOpen, setDetailsOpen] = useState(false);
-    const handleClose = () => {
-        dispatch(setStatusModalCart(false))
-    }
     const [page, setPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(6);
 
@@ -44,7 +38,7 @@ const MainDish: React.FC<MainDishProps> = ({flowers,loading, error}) => {
     };
     const handleOpenDetails = (id: string) => {
         const data = flowers.find(it => it.id === id)
-        setSelectedFlower(data);
+        if(data) setSelectedFlower(data);
         setDetailsOpen(true);
     };
     const handleCloseDetails = () => {
@@ -78,9 +72,6 @@ const MainDish: React.FC<MainDishProps> = ({flowers,loading, error}) => {
             {error &&
                 <ErrorDisplay message="Some thing wrong!"/>
             }
-            {
-                <FlowerCartModal open={showModalCart} onClose={handleClose}/>
-            }
 
             <FlowerDetailsModal
                 open={detailsOpen}
@@ -91,13 +82,7 @@ const MainDish: React.FC<MainDishProps> = ({flowers,loading, error}) => {
                 <SortByDate field={'createdAt'}/>
                 <SortByDate field={'price'}/>
             </Box>
-            {/*<Box display="flex" justifyContent="end">*/}
 
-            {/*    {Array.isArray(currentFlowers) && currentFlowers.map((currentFlower) => (*/}
-            {/*        <FlowerCard key={currentFlower.id} flower={currentFlower} onOpenDetails={handleOpenDetails}/>*/}
-            {/*    ))}*/}
-
-            {/*</Box>*/}
             <Box
                 sx={{
                     display: "grid",

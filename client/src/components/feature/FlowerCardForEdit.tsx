@@ -1,46 +1,42 @@
 import * as React from 'react';
-import {styled} from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
-import Collapse from '@mui/material/Collapse';
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import {red} from '@mui/material/colors';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShareIcon from '@mui/icons-material/Share';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import type {Flower} from '../../types/flower.ts';
 import {useDispatch} from "react-redux";
 import type {AppDispatch} from "../../store/store.ts";
-import {setFlav} from "../../store/slices/flowerSlice.ts";
-import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
-import {useState} from "react";
-import FlowerEdit from "./FlowerEdit.tsx";
+import {  Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import {useEffect} from "react";
+import {deleteFlowerById, fetchFlowers} from "../../store/slices/flowerSlice.ts";
 
+
+type Props = {
+    type: string;
+    shopId?: number;
+    flowerId?: number;
+}
 interface FlowerCardProps {
     flower: Flower;
-    onOpenDetails: (id: number) => void;
+    onOpenEditForm: (args:Props) => void;
 }
 
-interface ExpandMoreProps extends React.ComponentProps<typeof IconButton> {
-    expand: boolean;
-}
-
-
-export const FlowerCardForChang: React.FC<FlowerCardProps> = ({flower, onOpenDetails}) => {
-    const [expanded, setExpanded] = React.useState(false);
+export const FlowerCardForEdit: React.FC<FlowerCardProps> = ({flower, onOpenEditForm}) => {
     const dispatch = useDispatch<AppDispatch>()
-    const handleDelete = (id:number) => {
 
+    const handleDelete = async (id:number) => {
+        await dispatch(deleteFlowerById(id))
+        await dispatch(fetchFlowers())
     };
-    const handleEdit = (id:number) => {
-
-        onOpenDetails(id)
+    const handleEdit = (args:Props) => {
+        onOpenEditForm(args)
     }
+
     return (
         <>
 
@@ -91,7 +87,7 @@ export const FlowerCardForChang: React.FC<FlowerCardProps> = ({flower, onOpenDet
                 </Typography>
             </CardContent>
             <CardActions disableSpacing>
-                <IconButton aria-label="edit flower" onClick={() => handleEdit(flower.id)}>
+                <IconButton aria-label="edit flower" onClick={() => handleEdit({type:"update",flowerId:flower.id, shopId:flower.shopId})}>
                     <EditIcon/>
                 </IconButton>
                 <IconButton aria-label="share" onClick={() => handleDelete(flower.id)}>

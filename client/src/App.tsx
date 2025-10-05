@@ -27,7 +27,7 @@ function App() {
     }
 
     return (
-        <Box sx={{display: "flex", width: "inherit"}}>
+        <Box sx={{display: "flex", width: "100vw"}}>
             <Header>
                 <AppBar onAccount={handleAccount}/>
                 <AccountModal open={open} onClose={() => setOpen(false)} onSave={handleSave}/>

@@ -18,12 +18,14 @@ import MoreIcon from '@mui/icons-material/MoreVert';
 import {useDispatch, useSelector} from "react-redux";
 import type {RootState} from "../../store/store.ts";
 import {debounce} from "../../helper/debaunce.ts";
-import {setStatusModalCart} from "../../store/slices/cartFlowerSlice";
+import {clearCart, setStatusModalCart} from "../../store/slices/cartFlowerSlice";
 import {useNavigate} from "react-router-dom";
 import {ROOT_ROUTE} from "../../utils/consts"
 import {logout} from "../../store/slices/authSlice";
 import type {Flower} from "../../types/flower.ts";
 import {updateStateFlower} from "../../store/slices/flowerSlice.ts";
+import FlowerCartModal from "./FlowerCartModal.tsx";
+import {useState} from "react";
 
 const Search = styled('div')(({theme}) => ({
     position: 'relative',
@@ -70,7 +72,7 @@ interface PrimarySearchAppBarProps {
 export default function PrimarySearchAppBar({onAccount}:PrimarySearchAppBarProps) {
     const navigate = useNavigate()
     const dispatch = useDispatch();
-    const {totalAmount, totalQuantity} = useSelector((state: RootState) => state.cartFlower);
+    const {totalAmount, totalQuantity,order} = useSelector((state: RootState) => state.cartFlower);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
         React.useState<null | HTMLElement>(null);
@@ -81,7 +83,7 @@ export default function PrimarySearchAppBar({onAccount}:PrimarySearchAppBarProps
     // const {list, originList} = useSelector((state: RootState) => state.flights);
     const {flowers, originFlowers} = useSelector((state: RootState) => state.flower);
 
-
+    const [openCart, setOpenCart]= useState<boolean>(false)
     const debouncedSearch = React.useMemo(
         () =>
             debounce((value: string) => {
@@ -101,6 +103,7 @@ export default function PrimarySearchAppBar({onAccount}:PrimarySearchAppBarProps
 
     const handelOpenCart = () => {
         dispatch(setStatusModalCart(true))
+        setOpenCart(true)
     };
 
     const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -123,6 +126,7 @@ export default function PrimarySearchAppBar({onAccount}:PrimarySearchAppBarProps
     const handleExit = () => {
         localStorage.removeItem('token')
         dispatch(logout())
+        dispatch(clearCart())
         navigate(ROOT_ROUTE)
         setAnchorEl(null);
         handleMobileMenuClose();
@@ -154,61 +158,11 @@ export default function PrimarySearchAppBar({onAccount}:PrimarySearchAppBarProps
         </Menu>
     );
 
-    const mobileMenuId = 'primary-search-account-menu-mobile';
-    const renderMobileMenu = (
-        <Menu
-            anchorEl={mobileMoreAnchorEl}
-            anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
-            id={mobileMenuId}
-            keepMounted
-            transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
-            open={isMobileMenuOpen}
-            onClose={handleMobileMenuClose}
-        >
-            <MenuItem>
-                <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                    <Badge badgeContent="" color="error">
-                        <MailIcon/>
-                    </Badge>
-                </IconButton>
-                <p>Messages</p>
-            </MenuItem>
-            <MenuItem>
-                <IconButton
-                    size="large"
-                    aria-label="show notifications"
-                    color="inherit"
-                    onClick={handelOpenCart}
-                >
-                    <Badge badgeContent={totalAmount} color="error">
-                        <ShoppingCart/>
-                    </Badge>
-                </IconButton>
-                <p>Notifications</p>
-            </MenuItem>
-            <MenuItem onClick={handleProfileMenuOpen}>
-                <IconButton
-                    size="large"
-                    aria-label="account of current user"
-                    aria-controls="primary-search-account-menu"
-                    aria-haspopup="true"
-                    color="inherit"
-                >
-                    <AccountCircle/>
-                </IconButton>
-                <p>Profile</p>
-            </MenuItem>
-        </Menu>
-    );
 
     return (
-        <Box sx={{flexGrow: 1}}>
+        <>
+            <FlowerCartModal order={order} open={openCart} onClose={()=>setOpenCart(false)}/>
+            <Box sx={{flexGrow: 1}}>
             <AppBar position="fixed" sx={{top: 0, left: 0, right: 0}}>
                 <Toolbar>
                     <IconButton
@@ -251,7 +205,7 @@ export default function PrimarySearchAppBar({onAccount}:PrimarySearchAppBarProps
                             color="inherit"
                             onClick={handelOpenCart}
                         >
-                            <Badge badgeContent={ totalQuantity} color="error">
+                            <Badge badgeContent={totalQuantity} color="error">
                                 <ShoppingCart/>
                             </Badge>
                         </IconButton>
@@ -267,23 +221,10 @@ export default function PrimarySearchAppBar({onAccount}:PrimarySearchAppBarProps
                             <AccountCircle/>
                         </IconButton>
                     </Box>
-                    <Box sx={{display: {xs: 'flex', md: 'none'}}}>
-                        <IconButton
-                            size="large"
-                            aria-label="show more"
-                            aria-controls={mobileMenuId}
-                            aria-haspopup="true"
-                            onClick={handleMobileMenuOpen}
-                            color="inherit"
-                        >
-                            <MoreIcon/>
-                        </IconButton>
-                    </Box>
                 </Toolbar>
             </AppBar>
-            {renderMobileMenu}
             {renderMenu}
-        </Box>
+        </Box></>
     );
 }
 

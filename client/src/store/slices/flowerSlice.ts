@@ -1,7 +1,5 @@
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
-import type {Flower, InfoFlower, InfoOrder} from '../../types/Flower';
-import type {InfoCategory} from '../../types/Category';
-import type {InfoShop} from '../../types/Shop';
+import type {Flower, InfoFlower} from '../../types/Flower';
 import {FlowerService} from "../../services/flower.ts";
 
 export const fetchFlowers = createAsyncThunk('data/fetchFlowers', async () => {
@@ -9,18 +7,30 @@ export const fetchFlowers = createAsyncThunk('data/fetchFlowers', async () => {
     return res;
 });
 
-export const fetchCategories = createAsyncThunk('data/fetchCategories', async () => {
-    const res:InfoCategory = await FlowerService.fetchCategories();
-    return res;
-});
+export const updateFlowerById = createAsyncThunk('data/updateFlower',
+    async (form: FormData) => {
+        const res: Flower = await FlowerService.updateFlowerById(form);
+        return res;
+    });
+export const deleteFlowerById = createAsyncThunk('data/deleteFlower',
+    async (id: number) => {
+        const res:number = await FlowerService.deleteFlowerById(id);
+        return res;
+    });
+export const createFlower = createAsyncThunk('data/createFlower',
+    async (form: FormData) => {
+        const res:Flower = await FlowerService.createFlower(form);
+        return res;
+    });
+
 
 
 interface DataState {
     flowers: Flower[];
     favorite: Flower[];
     originFlowers: InfoFlower;
-    categories: InfoCategory;
-    shops: InfoShop;
+    // categories: InfoCategory;
+    // shops: InfoShop;
     loading: boolean;
     error: string | null;
     current: null;
@@ -34,8 +44,6 @@ const initialState: DataState = {
     flowers: [],
     favorite:[],
     originFlowers:{ count:0, rows: []},
-    categories: { count:0, rows: []},
-    shops: { count:0, rows: []},
     loading: false,
     error: null,
     current: null,
@@ -100,19 +108,46 @@ export const flowerSlice = createSlice({
             state.error = action.error.message || 'Ошибка при загрузке цветов';
         });
 
-        // Categories
-        builder.addCase(fetchCategories.pending, (state) => {
+
+        builder.addCase(updateFlowerById.pending, (state) => {
             state.loading = true;
             state.error = null;
         });
-        builder.addCase(fetchCategories.fulfilled, (state, action: PayloadAction<InfoCategory>) => {
+        builder.addCase(updateFlowerById.fulfilled, (state, action: PayloadAction<Flower>) => {
             state.loading = false;
-            state.categories = action.payload;
+            const index = state.flowers.findIndex(flower => flower.id === action.payload.id);
+            state.flowers[index]= action.payload
         });
-        builder.addCase(fetchCategories.rejected, (state, action) => {
+        builder.addCase(updateFlowerById.rejected, (state, action) => {
             state.loading = false;
             state.error = action.error.message || 'Ошибка при загрузке категорий';
         });
+        builder.addCase(deleteFlowerById.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+        });
+        builder.addCase(deleteFlowerById.fulfilled, (state, action: PayloadAction<number>) => {
+            state.loading = false;
+            state.flowers = state.flowers.filter(flower=>flower.id!==action.payload);
+            state.originFlowers.rows = state.originFlowers.rows.filter(flower=>flower.id!==Number(action.payload));
+        });
+        builder.addCase(deleteFlowerById.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error.message || 'Ошибка при загрузке категорий';
+        });
+        builder.addCase(createFlower.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+        });
+        builder.addCase(createFlower.fulfilled, (state, action: PayloadAction<Flower>) => {
+            state.loading = false;
+            state.flowers.push(action.payload);
+        });
+        builder.addCase(createFlower.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error.message || 'Ошибка при загрузке категорий';
+        });
+
 
 
     }

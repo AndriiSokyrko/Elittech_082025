@@ -1,6 +1,7 @@
 const {Shop, Category, Flower, User} = require('../models');
 const {Mode} = require("fs");
 const {Model} = require("sequelize");
+const path = require("path");
 
 class FlowerController {
     async getFlowers(req, res, next) {
@@ -27,10 +28,16 @@ class FlowerController {
     }
 
     async addFlower(req, res, next) {
-        const {name, address, phone}= req.body
+        const {name, description, price,stock,shopId,categoryId}= req.body
+        let imageUrl="";
         try {
-            let flower = await Flower.create({name, address, phone})
-
+            if (req.files?.avatarFile) {
+                const { avatarFile } = req.files;
+                const filePath = path.resolve(__dirname, '..', 'static', avatarFile.name);
+                await avatarFile.mv(filePath);
+                imageUrl=process.env.URL_PATH+'/'+ avatarFile.name
+            }
+            let flower = await Flower.create({name, description, price,stock,shopId,categoryId, imageUrl})
             res.status(200).json(flower);
         } catch (e) {
             next(e);
@@ -47,15 +54,25 @@ class FlowerController {
         }
     }
     async updateFlowerById(req, res, next) {
-        const { id, name, address, phone } = req.body;
+        const {id,name, description, price,stock,shopId,categoryId}= req.body
+
 
         try {
             const flowerId = Number(id);
-            const flower = await Flower.findOne({ where: { id: shopId } });
+            const flower = await Flower.findOne({ where: { id } });
             if (!flower) {
                 return res.status(404).json({ message: "flower not found" });
             }
-            await flower.update({ name, address, phone });
+
+            await flower.update({id,name, description, price,stock,shopId,categoryId });
+
+            if (req.files?.avatarFile) {
+                const { avatarFile } = req.files;
+                const filePath = path.resolve(__dirname, '..', 'static', avatarFile.name);
+                await avatarFile.mv(filePath);
+                const imageUrl=process.env.URL_PATH+'/'+ avatarFile.name
+                flower.update({imageUrl})
+            }
             res.status(200).json(flower);
         } catch (e) {
             next(e);

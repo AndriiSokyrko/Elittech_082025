@@ -1,12 +1,13 @@
 import {
+    ADMINPANEL_ROUTE,
     FLOWERS_ROUTE,
     LOGIN_ROUTE,
-    REGISTRATION_ROUTE, ROOT_ROUTE, SHOPLIST_ROUTE
+    REGISTRATION_ROUTE, ROOT_ROUTE
 } from "./utils/consts";
 import Auth from "./components/core/Auth";
 import AppRoot from "./components/core/AppRoot";
 import Main from "./components/core/Main.tsx";
-import ShopsListEdit from "./components/feature/ShopsListEdit.tsx";
+import AdminPanel from "./components/share/AdminPanel.tsx";
 
 export const adminRoutes = [
 
@@ -15,8 +16,8 @@ export const adminRoutes = [
         Component: Main
     },
     {
-        path: SHOPLIST_ROUTE,
-        Component: ShopsListEdit
+        path: ADMINPANEL_ROUTE,
+        Component: AdminPanel
     },
 ]
 export const publicRoutes = [

@@ -223,8 +223,8 @@ module.exports = {
 
             return {
                 ...f,
-                shopId: randomShop,
-                categoryId: randomCategory,
+                // shopId: randomShop,
+                // categoryId: randomCategory,
                 createdAt: new Date(now.getTime() + i * 60000),
                 updatedAt: new Date(now.getTime() + i * 60000)
             };

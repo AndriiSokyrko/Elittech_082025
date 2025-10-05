@@ -1,22 +1,16 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
-    Modal,
     Box,
     TextField,
-    Button, Container,
+    Button,  Modal,
 } from '@mui/material';
 import {useDispatch, useSelector} from "react-redux";
 import type {AppDispatch, RootState} from "../../store/store.ts";
-import {createShop, updateShop, updateShopById} from "../../store/slices/shopSlice.ts";
-import styles from "../../App.module.css";
-import type {Shop} from "../../types/shop.ts";
+import {createShop,  updateShopById} from "../../store/slices/shopSlice.ts";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 
-interface ShopModalProps {
-    id: number;
-    nameForm: string;
-    open: boolean;
-    onClose: () => void;
-}
+
 
 const modalStyle = {
     position: 'absolute' as const,
@@ -30,8 +24,16 @@ const modalStyle = {
     p: 3,
     borderRadius: 2,
 };
-
-const ShopEdit: React.FC<ShopModalProps> = ({nameForm, id, open, onClose}) => {
+type PropsData= {
+    type:string;
+    shopId?:number;
+}
+type Props={
+    payload: PropsData;
+    open:boolean;
+    onClose:()=>void;
+}
+const ShopEdit: React.FC<Props> = ({payload,open, onClose}) => {
     const {shops} = useSelector((state: RootState) => state.shop);
 
     const [name, setName] = useState<string>("");
@@ -40,11 +42,21 @@ const ShopEdit: React.FC<ShopModalProps> = ({nameForm, id, open, onClose}) => {
     const [errors, setErrors] = useState<{ [k: string]: string }>({});
 
     useEffect(() => {
-        const t = shops.rows.find(shop => shop.id === id)
-        setName(t?.name)
-        setAddress(t?.address)
-        setPhone(t?.phone)
-    }, [id]);
+        if(!shops.rows) return
+        if(payload.type==="create" ) {
+            setName("")
+            setAddress("")
+            setPhone("")
+            return;
+        }
+
+        const _shops = shops.rows.find(shop => shop.id === payload.shopId)
+        if(_shops) {
+            setName(_shops.name)
+            setAddress(_shops.address)
+            setPhone(_shops.phone)
+        }
+    }, [payload.shopId]);
     const dispatch = useDispatch<AppDispatch>();
     const validate = (): boolean => {
         const e: { [k: string]: string } = {};
@@ -57,12 +69,12 @@ const ShopEdit: React.FC<ShopModalProps> = ({nameForm, id, open, onClose}) => {
     const handleSave = () => {
         if (!validate()) return;
         const formData: FormData = new FormData();
-        formData.append("id", String(id));
+        formData.append("id", String(payload.shopId));
         formData.append("name", name);
         formData.append("phone", phone);
         formData.append("address", address);
 
-        if (nameForm === "Update") {
+        if (payload.type === "update") {
             dispatch(updateShopById(formData));
 
         } else {
@@ -73,8 +85,15 @@ const ShopEdit: React.FC<ShopModalProps> = ({nameForm, id, open, onClose}) => {
     };
 
     return (
-        <Container className={open ? styles.show : styles.hide}>
+        <Modal open={open} onClose={onClose}>
             <Box sx={modalStyle}>
+                <IconButton
+                    aria-label="close"
+                    onClick={onClose}
+                    sx={{position: 'absolute', top: 8, right: 8}}
+                >
+                    <CloseIcon/>
+                </IconButton>
                 <TextField
                     label="Назва магазину"
                     value={name}
@@ -105,11 +124,11 @@ const ShopEdit: React.FC<ShopModalProps> = ({nameForm, id, open, onClose}) => {
                 <Box sx={{display: 'flex', justifyContent: 'flex-end', gap: 1, mt: 3}}>
                     <Button onClick={onClose}>Скасувати</Button>
                     <Button variant="contained" onClick={handleSave}>
-                        {nameForm}
+                        {payload.type}
                     </Button>
                 </Box>
             </Box>
-        </Container>
+        </Modal>
     );
 };
 

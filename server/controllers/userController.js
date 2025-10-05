@@ -45,7 +45,7 @@ class UserController {
                 const { avatar } = req.files;
                 const filePath = path.resolve(__dirname, '..', 'static', avatar.name);
                 await avatar.mv(filePath);
-                await userInfo.update({ avatarFile: avatar.name });
+                await userInfo.update({ avatarFile: process.env.URL_PATH+'/'+avatar.name });
             }
 
             res.status(200).json(user);

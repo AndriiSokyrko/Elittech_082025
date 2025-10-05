@@ -17,15 +17,14 @@ import type {RootState} from '../../store/store';
 import {clearCart} from '../../store/slices/cartSlice';
 import type {InfoOrder} from "../../types/flower.ts";
 import {removeOrder} from "../../store/slices/cartFlowerSlice.ts";
-import type {User} from "../../types/user.ts";
 import {addPurchase} from "../../store/slices/purchaseSlice.ts";
 import type {Purchase, PurchaseItem} from "../../types/purchase.ts";
-import {getUserById} from "../../services/user.ts";
 import {updateAccount} from "../../store/slices/authSlice.ts";
 
 interface CartModalProps {
     open: boolean;
     onClose: () => void;
+    order:InfoOrder[];
 }
 
 const style = {
@@ -42,21 +41,24 @@ const style = {
     borderRadius: 2,
 };
 
-const FlowerCartModal: React.FC<CartModalProps> = ({open, onClose}) => {
+const FlowerCartModal: React.FC<CartModalProps> = ({order, open, onClose}) => {
     const dispatch = useDispatch();
-    const orders: InfoOrder[] = useSelector((state: RootState) => state.cartFlower.order);
+    // const orders: InfoOrder[] = useSelector((state: RootState) => state.cartFlower.order);
     const totalAmount = useSelector((state: RootState) => state.cartFlower.totalAmount);
     const {user} = useSelector((state: RootState) => state.user);
+
     const [name, setName] = useState<string>("");
-    const [email, setEmail] = useState<string>(user.email);
+    const [email, setEmail] = useState<string>("");
     const [phone, setPhone] = useState<string>( "");
     const [address, setAddress] = useState<string>("");
-    useMemo(() => {
-        setName(user.userInfo?.name)
-        setEmail(user?.email)
-        setPhone(user.userInfo?.phone)
-        setAddress(user.userInfo?.address)
-    }, [user, user.userInfo]);
+    useEffect(() => {
+        if(user && user.userInfo) {
+            setName(user.userInfo.name)
+            setEmail(user.email)
+            setPhone(user.userInfo.phone)
+            setAddress(user.userInfo.address)
+        }
+    }, [user]);
     const handleClear = () => {
         dispatch(clearCart());
     };
@@ -66,8 +68,8 @@ const FlowerCartModal: React.FC<CartModalProps> = ({open, onClose}) => {
     };
 
     const handleCheckout = () => {
-        if (!orders) return
-        const items: PurchaseItem[] = orders.map(t => {
+        if (!order) return
+        const items: PurchaseItem[] = order.map(t => {
             return {
                 name: t.flower.name, quantity: t.quantity, price: t.flower.price, shopName: t.flower.shop?.name
             }
@@ -108,7 +110,7 @@ const FlowerCartModal: React.FC<CartModalProps> = ({open, onClose}) => {
 
                 <Divider sx={{my: 2}}/>
 
-                {orders.length === 0 ? (
+                {!order ? (
                     <Typography variant="body1" sx={{color: 'grey'}}>Корзина пуста</Typography>
                 ) : (
                     <Box sx={{display: 'flex', gap: 4}}>
@@ -151,7 +153,7 @@ const FlowerCartModal: React.FC<CartModalProps> = ({open, onClose}) => {
                         {/* Правый блок — список заказов */}
                         <Box sx={{flex: 1}}>
                             <List sx={{color: 'grey'}}>
-                                {orders.map((item: InfoOrder) => (
+                                {  order.map((item: InfoOrder) => (
                                     <ListItem key={item.flower.id} disableGutters>
                                         <ListItemText
                                             primary={`${item.flower.name} × 1`}

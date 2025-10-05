@@ -6,7 +6,7 @@ import {updateStateFlower} from "../../store/slices/flowerSlice.ts";
 import type {Flower} from "../../types/flower.ts";
 import {fetchShops} from "../../store/slices/shopSlice.ts";
 import {useNavigate} from "react-router-dom";
-import {SHOPLIST_ROUTE} from "../../utils/consts.ts";
+import {ADMINPANEL_ROUTE} from "../../utils/consts.ts";
 
 
 const ShopsList: React.FC = () => {
@@ -21,8 +21,8 @@ const ShopsList: React.FC = () => {
         );
         dispatch(updateStateFlower(data));
     };
-    const handleAddShop = () => {
-        navigate(SHOPLIST_ROUTE)
+    const handleAdminPanel = () => {
+        navigate(ADMINPANEL_ROUTE)
     }
     const handleClear = () => {
         dispatch(updateStateFlower(originFlowers.rows));
@@ -36,7 +36,7 @@ const ShopsList: React.FC = () => {
                 <ListItem disablePadding>
                     <ListItemButton
                         selected={selectedIndex === shops.rows.length}
-                        onClick={handleAddShop}
+                        onClick={handleAdminPanel}
                         sx={{
                             "&:hover": {
                                 bgcolor: "primary.light",

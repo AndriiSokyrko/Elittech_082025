@@ -1,9 +1,5 @@
-import {$host, $host_flights} from "./index.ts";
-import type {Flower} from "../../types/flower.ts";
-import type {Flight} from "../types/flight.ts";
-import type {Category, InfoCategory} from "../types/category.ts";
-import type {InfoShop, Shop} from "../types/shop.ts";
-import type {InfoFlower} from "../types/flower.ts";
+import {$host} from "./index.ts";
+import type {InfoFlower, Flower} from "../types/flower.ts";
 
 
 export const FlowerService = {
@@ -12,11 +8,21 @@ export const FlowerService = {
         const {data} = await $host.get<InfoFlower>('/api/flowers');
         return data;
     },
-
-    async fetchCategories(): Promise<InfoCategory> {
-        const {data} = await $host.get<InfoCategory[]>('/api/flowers/categories');
-        return data;
+    async updateFlowerById(form:FormData): Promise<Flower> {
+        const res = Object.fromEntries(form.entries());
+        const {data} = await $host.patch(`api/flowers/${res.id}`, form)
+        return data
     },
+    async deleteFlowerById(delId: number): Promise<number> {
+        const response = await $host.delete<{ message: string; id: number }>(
+            `api/flowers/${delId}`
+        );
+        return response.data.id;
+    },
+    async createFlower(form:FormData): Promise<Flower> {
+        const {data} = await $host.post(`api/flowers`, form)
+        return data
+    }
 
     
 

@@ -51,7 +51,8 @@ const authSlice = createSlice({
             .addCase(updateAccount.fulfilled, (state, action:PayloadAction<User >) => {
                 state.loading = false;
                 state.user=action.payload;
-                state.user.userInfo.avatarFile= import.meta.env.VITE_APP_API_URL + state.user.userInfo.avatarFile
+                // state.user.userInfo.avatarFile= import.meta.env.VITE_APP_API_URL + action.payload.userInfo.avatarFile
+                state.user.userInfo.avatarFile=  action.payload.userInfo.avatarFile
             })
             .addCase(updateAccount.rejected, (state, action) => {
                 state.loading = false;

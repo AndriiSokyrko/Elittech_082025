@@ -28,7 +28,7 @@ const handlePurchase=()=>{
                 onChange={(event, newValue) => {
                     setValue(newValue);
                     if(event.target.id==='favorits'){
-                        console.log('fav')
+                        //do something
                     }
                 }}
             >

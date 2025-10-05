@@ -21,7 +21,7 @@ const loadStateFromLocalStorage = (): CartFlowerState => {
     }
     return {id_user:0,order: [],totalQuantity:0, totalAmount: 0, showModalCart: false};
 };
-const saveStateToLocalStorage = (state: CartState) => {
+const saveStateToLocalStorage = (state: CartFlowerState) => {
     try {
         localStorage.setItem("cart", JSON.stringify(state));
     } catch (err) {
@@ -39,11 +39,10 @@ const cartFlowerSlice = createSlice({
             saveStateToLocalStorage(state);
 
         },
-        addOrder: (state, action: PayloadAction<InfoOrder|null>) => {
-            const info = { ...action.payload, quantity: action.payload.quantity || 1 };
-            state.order = [...(state.order || []), info];
-            state.totalQuantity += info.quantity;
-            state.totalAmount += info.quantity * info.flower.price;
+        addOrder: (state, action: PayloadAction<InfoOrder>) => {
+            state.order.push(action.payload);
+            if(action.payload.quantity) state.totalQuantity += action.payload.quantity;
+            if(action.payload.quantity) state.totalAmount += action.payload.quantity * action.payload.flower.price;
 
             saveStateToLocalStorage(state);
             state.showModalCart=false

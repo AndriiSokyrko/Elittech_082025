@@ -5,6 +5,7 @@ import cartFlowerSlice from "./slices/cartFlowerSlice.ts";
 import flowerSlice from "./slices/flowerSlice.ts";
 import purchaseSlice from "./slices/purchaseSlice.ts";
 import shopSlice from "./slices/shopSlice.ts";
+import categorySlice from "./slices/categorySlice.ts";
 
 export const store = configureStore({
     reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
         user: authSlice,
         flower: flowerSlice,
         shop: shopSlice,
+        category: categorySlice,
         cartFlower: cartFlowerSlice,
         purchase:purchaseSlice,
     },
