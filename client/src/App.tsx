@@ -12,14 +12,15 @@ import PurchaseModal from "./components/feature/PurchaseModal.tsx";
 import {useDispatch, useSelector} from "react-redux";
 import type {AppDispatch, RootState} from "./store/store.ts";
 import {setFlagPurchase} from "./store/slices/purchaseSlice.ts";
+import {Container} from "@mui/material";
 
 function App() {
-    const dispatch= useDispatch<AppDispatch>()
+    const dispatch = useDispatch<AppDispatch>()
     const {flagPurchase} = useSelector((state: RootState) => state.purchase);
 
     const [open, setOpen] = useState(false);
-    const handleSave = (data: User) => {
-        setOpen(false);
+    const handleSave = (flag: boolean) => {
+        setOpen(flag);
     };
     const handleAccount = (flag: boolean) => {
         setOpen(flag);
@@ -27,7 +28,7 @@ function App() {
     }
 
     return (
-        <Box sx={{display: "flex", width: "100vw"}}>
+        <Container>
             <Header>
                 <AppBar onAccount={handleAccount}/>
                 <AccountModal open={open} onClose={() => setOpen(false)} onSave={handleSave}/>
@@ -35,12 +36,12 @@ function App() {
             <AppRouter/>
             <Footer>
                 <IconNavigation/>
-                <PurchaseModal  open={flagPurchase?flagPurchase:false} onClose={() => dispatch(setFlagPurchase())}>
+                <PurchaseModal open={flagPurchase ? flagPurchase : false} onClose={() => dispatch(setFlagPurchase())}>
                     <AppRouter/>
                 </PurchaseModal>
             </Footer>
 
-        </Box>
+        </Container>
     );
 }
 

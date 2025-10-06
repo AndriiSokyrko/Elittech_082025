@@ -12,8 +12,7 @@ import type {Flower} from '../../types/flower.ts';
 import {useDispatch} from "react-redux";
 import type {AppDispatch} from "../../store/store.ts";
 import {  Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
-import {useEffect} from "react";
-import {deleteFlowerById, fetchFlowers} from "../../store/slices/flowerSlice.ts";
+import {deleteFlowerById} from "../../store/slices/flowerSlice.ts";
 
 
 type Props = {
@@ -31,7 +30,6 @@ export const FlowerCardForEdit: React.FC<FlowerCardProps> = ({flower, onOpenEdit
 
     const handleDelete = async (id:number) => {
         await dispatch(deleteFlowerById(id))
-        await dispatch(fetchFlowers())
     };
     const handleEdit = (args:Props) => {
         onOpenEditForm(args)

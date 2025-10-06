@@ -67,7 +67,7 @@ const StyledInputBase = styled(InputBase)(({theme}) => ({
     },
 }));
 interface PrimarySearchAppBarProps {
-    onAccount: () => void; // function prop
+    onAccount: (args:boolean) => void; // function prop
 }
 export default function PrimarySearchAppBar({onAccount}:PrimarySearchAppBarProps) {
     const navigate = useNavigate()
@@ -131,9 +131,6 @@ export default function PrimarySearchAppBar({onAccount}:PrimarySearchAppBarProps
         setAnchorEl(null);
         handleMobileMenuClose();
     }
-    const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-        setMobileMoreAnchorEl(event.currentTarget);
-    };
 
     const menuId = 'primary-search-account-menu';
     const renderMenu = (
