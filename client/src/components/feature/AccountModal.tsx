@@ -1,4 +1,4 @@
-import React, {useState, useEffect, ChangeEvent, useMemo} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
     Modal,
     Box,
@@ -92,7 +92,7 @@ const AccountModal: React.FC<AccountModalProps> = ({
         return Object.keys(e).length === 0;
     };
 
-    const handleAvatarChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files && e.target.files[0];
         const imageUrl = URL.createObjectURL(file);
         setAvatarUrl(imageUrl)

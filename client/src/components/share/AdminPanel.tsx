@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import ShopsListEdit from "../feature/ShopsListEdit.tsx";
-import {Container} from "@mui/material";
+import {Box, Container} from "@mui/material";
 import ShopEdit from "../feature/ShopEdit.tsx";
 import FlowerEdit from "../feature/FlowerEdit.tsx";
 import {useDispatch, useSelector} from "react-redux";
@@ -29,20 +29,15 @@ const handleOpenFormEditFlower = (payload:Props)=>{
     setOpenFormEditFlower(true)
 }
     useEffect(() => {
-        const data = originFlowers.rows.filter((flower: Flower) =>
-            flower.shop?.id=== originFlowers.rows[0].id
-        );
-        console.log(data)
-        dispatch(updateStateFlower(data));
-    }, []);
+    }, [dispatch]);
     return(
-        <Container
+        <Box
             sx={{
                 width: "100%",
                 height: "100vh",
                 flexWrap:"wrap",
                 display: "grid",
-                gridTemplateColumns: "repeat(2, 1fr)",
+                gridTemplateColumns: "2fr 3fr",
                 gap: 2,
                 paddingTop: "160px",     // вместо marginTop
                 paddingLeft: "50px",     // вместо marginLeft
@@ -52,11 +47,11 @@ const handleOpenFormEditFlower = (payload:Props)=>{
             }}
         >
             <ShopsListEdit openFormEditShop={handleOpenFormEditShop} openFormEditFlower={handleOpenFormEditFlower}/>
-            <FlowerListEdit flowers={flowers} loading={loading} error={error} editFormFlower={handleOpenFormEditFlower}/>
+            <FlowerListEdit editFormFlower={handleOpenFormEditFlower}/>
             <ShopEdit payload={dataEditShop} open={openFormEditShop} onClose={() => setOpenFormEditShop(false)}/>
             <FlowerEdit payload={dataEditFlower} open={openFormEditFlower} onClose={() => setOpenFormEditFlower(false)}/>
 
-        </Container>
+        </Box>
 
     )
 }

@@ -1,11 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {Loader} from "../share/Loader";
 import ErrorDisplay from "../share/ErrorDisplay";
-import {useDispatch, useSelector} from "react-redux";
-import type {AppDispatch, RootState} from "../../store/store";
+import {  useSelector} from "react-redux";
+import type { RootState} from "../../store/store";
 import Box from "@mui/material/Box";
-import {fetchFlowers, updateStateFlower} from "../../store/slices/flowerSlice.ts";
-import type {Flower} from "../../types/flower.ts";
 import {FlowerPagination} from "./FlowerPagination.tsx";
 import {FlowerCardForEdit} from "./FlowerCardForEdit.tsx";
 import List from "@mui/material/List";
@@ -17,40 +15,33 @@ type Props = {
 }
 
 interface MainDishProps {
-    flowers: Flower[];
-    loading: boolean;
-    error: string | null;
     editFormFlower: (args: Props) => void;
 }
 
-const FlowerListEdit: React.FC<MainDishProps> = ({flowers, loading, error, editFormFlower}) => {
-    const dispatch = useDispatch<AppDispatch>();
-
+const FlowerListEdit: React.FC<MainDishProps> = ({  editFormFlower}) => {
+    const { flowers, loading, error} = useSelector((state: RootState) =>state.flower )
     const [page, setPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(2);
+    const currentFlowers = useMemo(() => {
+        return flowers.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+    }, [flowers, page, itemsPerPage]);
 
     useEffect(() => {
-        setItemsPerPage(2);
+        if(window.innerWidth<=1024) setItemsPerPage(2)
         const maxPage = Math.ceil(flowers.length / itemsPerPage);
         if (page > maxPage) {
             setPage(maxPage === 0 ? 1 : maxPage);
         }
     }, [flowers, itemsPerPage]);
 
-    const currentFlowers = React.useMemo(() => {
-        return flowers.slice((page - 1) * itemsPerPage, page * itemsPerPage);
-    }, [flowers, page, itemsPerPage]);
+
+
     const handlePageChange = (value: number) => {
         setPage(value);
     };
     const handleEditFormFlower = (args:Props)=>{
         editFormFlower(args)
     }
-    useEffect(() => {
-
-        dispatch(fetchFlowers());
-    }, [dispatch]);
-
 
     return (
         <List sx={{display: "flex", flexDirection: "column", border: "2px solid blue", padding: "20px", borderRadius: "8px", height: "80%", overflowY: "auto"}}>

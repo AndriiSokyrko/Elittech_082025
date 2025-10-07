@@ -28,7 +28,7 @@ function App() {
     }
 
     return (
-        <Container>
+        <Container >
             <Header>
                 <AppBar onAccount={handleAccount}/>
                 <AccountModal open={open} onClose={() => setOpen(false)} onSave={handleSave}/>

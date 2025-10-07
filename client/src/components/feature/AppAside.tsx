@@ -10,7 +10,7 @@ interface AppAsideProps {
 const AppAside: React.FC<AppAsideProps> = () => {
 
     return (
-        <Box style={{display: "flex", flexDirection: "column", height: "100vh", marginTop: "250px"}}>
+        <Box style={{display: "flex", flexDirection: "column", height: "100vh", marginTop: "100px"}}>
             <ShopsList />
         </Box>
     );

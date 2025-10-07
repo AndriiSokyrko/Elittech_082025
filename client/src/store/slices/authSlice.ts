@@ -1,7 +1,6 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import type {PayloadAction} from '@reduxjs/toolkit';
 import type {User} from "../../types/user.ts";
-import {jwtDecode as jwt_decode} from 'jwt-decode';
 import {updateUser, getUserById} from "../../services/user.ts"
 interface AuthState {
     user: User |null;
@@ -68,7 +67,7 @@ const authSlice = createSlice({
                 state.token= localStorage.getItem("token")
                 state.isAuthenticated=true
                 if(state.user.userInfo!==null) {
-                    state.user.userInfo.avatarFile = import.meta.env.VITE_APP_API_URL + state.user.userInfo.avatarFile
+                    state.user.userInfo.avatarFile =  state.user.userInfo.avatarFile
                 }
             })
             .addCase(getAccountById.rejected, (state, action) => {

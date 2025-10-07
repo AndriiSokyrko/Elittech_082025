@@ -15,11 +15,11 @@ import {FlowerPagination} from "./FlowerPagination.tsx";
 interface MainDishProps {
     flowers: Flower[];
     loading:boolean;
-    error:string;
+    error:string | null;
 }
 const MainDish: React.FC<MainDishProps> = ({flowers,loading, error}) => {
     const dispatch = useDispatch<AppDispatch>();
-    const [selectedFlower, setSelectedFlower] = useState<Flower[] | null>(null);
+    const [selectedFlower, setSelectedFlower] = useState<Flower  | null>(null);
     const [detailsOpen, setDetailsOpen] = useState(false);
     const [page, setPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(6);
@@ -36,7 +36,7 @@ const MainDish: React.FC<MainDishProps> = ({flowers,loading, error}) => {
     const handlePageChange = (value: number) => {
         setPage(value);
     };
-    const handleOpenDetails = (id: string) => {
+    const handleOpenDetails = (id: number) => {
         const data = flowers.find(it => it.id === id)
         if(data) setSelectedFlower(data);
         setDetailsOpen(true);
@@ -57,7 +57,6 @@ const MainDish: React.FC<MainDishProps> = ({flowers,loading, error}) => {
             else if (width < 900) setItemsPerPage(2);
             else if (width < 1200) setItemsPerPage(4);
             else if (width < 1600) setItemsPerPage(6);
-            else setItemsPerPage(8);
         };
 
         handleResize();
@@ -65,7 +64,7 @@ const MainDish: React.FC<MainDishProps> = ({flowers,loading, error}) => {
         return () => window.removeEventListener("resize", handleResize);
     }, []);
     return (
-        <Container style={{display: "flex", flexDirection: "column", height: "100vh", marginTop: "250px"}}>
+        <Container style={{display: "flex", flexDirection: "column", height: "100vh", marginTop: "100px"}}>
             {loading &&
                 <Loader/>
             }

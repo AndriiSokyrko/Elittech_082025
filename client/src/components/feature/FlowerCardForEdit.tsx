@@ -27,14 +27,12 @@ interface FlowerCardProps {
 
 export const FlowerCardForEdit: React.FC<FlowerCardProps> = ({flower, onOpenEditForm}) => {
     const dispatch = useDispatch<AppDispatch>()
-
     const handleDelete = async (id:number) => {
         await dispatch(deleteFlowerById(id))
     };
     const handleEdit = (args:Props) => {
         onOpenEditForm(args)
     }
-
     return (
         <>
 

@@ -15,7 +15,7 @@ import type {Shop} from '../../types/shop.ts';
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from '@mui/icons-material/Close';
 import type {Category} from "../../types/category.ts";
-import {createFlower} from "../../store/slices/flowerSlice.ts";
+import {createFlower, updateFlowerById} from "../../store/slices/flowerSlice.ts";
 
 type Props={
     type:string;
@@ -42,6 +42,8 @@ const FlowerEdit: React.FC<AddFlowerFormProps> = ({payload, open, onClose}) => {
     const [avatarFile, setAvatarFile] = useState<File|null >(null);
     const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
     const handleClearAvatar = () => {
+        console.log(payload.type)
+
         setAvatarFile(null);
         setAvatarUrl(null);
     };
@@ -63,8 +65,12 @@ const FlowerEdit: React.FC<AddFlowerFormProps> = ({payload, open, onClose}) => {
         formData.append('shopId', String(payload.shopId));
         formData.append('categoryId', String(categoryId));
         if (avatarFile) formData.append('avatarFile', avatarFile);
+        if(payload.type==="update"){
+            dispatch(updateFlowerById(formData));
 
-        dispatch(createFlower(formData));
+        } else{
+            dispatch(createFlower(formData));
+        }
         onClose();
     };
     useEffect(() => {
@@ -85,7 +91,6 @@ const FlowerEdit: React.FC<AddFlowerFormProps> = ({payload, open, onClose}) => {
         }
     }, [payload]);
     return (
-
         <Modal open={open} onClose={onClose} aria-labelledby="cart-modal-title">
             <Box
                 sx={{

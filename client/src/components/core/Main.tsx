@@ -10,32 +10,10 @@ const TwoSectionsGrid: React.FC = () => {
 
     return (
         <Box
-            display="flex"
-            width="100vw"
-            height="100vh"
+            sx={{display:"grid", gridTemplateColumns:"2fr 6fr"}}
         >
-            <Box
-                width="25%"
-                height="100%"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                bgcolor="black"
-            >
-                <AppAside/>
-            </Box>
-
-            <Box
-                width="75%"
-                height="100%"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                bgcolor="black"
-            >
-                <MainDish flowers={flagFav?favorite:flowers}   loading={loading} error={error}/>
-
-            </Box>
+            <AppAside/>
+            <MainDish flowers={flagFav?favorite:flowers}   loading={loading} error={error}/>
         </Box>
     );
 };

@@ -46,9 +46,9 @@ const ShopsListEdit: React.FC<Props> = ({openFormEditShop, openFormEditFlower}) 
     const handleReturn = () => {
         navigate(FLOWERS_ROUTE)
     };
-    const handleSelectShop = (name: string) => {
+    const handleSelectShop = (id: number) => {
         const data = originFlowers.rows.filter((flower: Flower) =>
-            flower.shop?.name.toLowerCase().includes(name.toLowerCase())
+            flower.shopId===id
         );
         dispatch(updateStateFlower(data));
     };
@@ -62,10 +62,10 @@ const ShopsListEdit: React.FC<Props> = ({openFormEditShop, openFormEditFlower}) 
             <List sx={{display: "flex", flexDirection: "column", border: "2px solid blue", padding: "20px", borderRadius: "8px", height: "80%", overflowY: "auto"}}>
             {shops.rows.map((shop, index) => (
                 <ListItem key={shop.id} disablePadding
-                          sx={{display: "flex", justifyContent: "space-between", alignItems: "center", height: "80%", overflowY: "auto"}}
+                          sx={{display: "flex", justifyContent: "space-between", alignItems: "center", height: "80%" }}
                           onClick={() => {
                               setSelectedIndex(index)
-                              handleSelectShop(shop.name)
+                              handleSelectShop(shop.id)
                           }}
                 >
                     <ListItemButton

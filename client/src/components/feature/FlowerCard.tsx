@@ -1,50 +1,29 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
-import Collapse from '@mui/material/Collapse';
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { red } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import type { Flower } from '../../types/flower.ts';
 import {useDispatch} from "react-redux";
 import type {AppDispatch} from "../../store/store.ts";
 import {setFlav} from "../../store/slices/flowerSlice.ts";
+import AddShoppingCart from '@mui/icons-material/AddShoppingCart';
 
 interface FlowerCardProps {
     flower: Flower;
-    onOpenDetails: (id: string) => void;
+    onOpenDetails: (id: number) => void;
 }
-
-interface ExpandMoreProps extends React.ComponentProps<typeof IconButton> {
-    expand: boolean;
-}
-
-const ExpandMore = styled((props: ExpandMoreProps) => {
-    const { expand, ...other } = props;
-    return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-    marginLeft: 'auto',
-    transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-    transition: theme.transitions.create('transform', {
-        duration: theme.transitions.duration.shortest,
-    }),
-}));
 
 export const FlowerCard: React.FC<FlowerCardProps> = ({ flower, onOpenDetails }) => {
-    const [expanded, setExpanded] = React.useState(false);
     const dispatch = useDispatch<AppDispatch>()
-    const handleExpandClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-        e.stopPropagation(); // клик по стрелке не открывает диалог
-        setExpanded(!expanded);
-    };
+
     const handleAddToFav=()=>{
         dispatch(setFlav(flower.id))
     }
@@ -52,7 +31,7 @@ export const FlowerCard: React.FC<FlowerCardProps> = ({ flower, onOpenDetails })
         <Card
             sx={{
                 width: "100%",
-                height: "auto",           // фиксированная высота всей карточки
+                height: "50vh",           // фиксированная высота всей карточки
                 m: 1,
                 cursor: 'pointer',
                 display: 'flex',
@@ -76,8 +55,8 @@ export const FlowerCard: React.FC<FlowerCardProps> = ({ flower, onOpenDetails })
                     image={flower.imageUrl}
                     alt={flower.name}
                     sx={{
-                        height: 200,        // фиксированная высота картинки
-                        objectFit: 'cover'  // обрезка картинки, сохраняем пропорции
+                        height: '25%',
+                        objectFit: 'cover',
                     }}
                 />
             )}
@@ -96,22 +75,14 @@ export const FlowerCard: React.FC<FlowerCardProps> = ({ flower, onOpenDetails })
             <CardActions disableSpacing>
                 <IconButton aria-label="add to favorites"><FavoriteIcon  onClick={handleAddToFav}/></IconButton>
                 <IconButton aria-label="share"><ShareIcon /></IconButton>
-                <ExpandMore
-                    expand={expanded}
+                <IconButton
                     onClick={ ()=>onOpenDetails(flower.id)}
-                    aria-expanded={expanded}
                     aria-label="add to cart"
                 >
-                    <ExpandMoreIcon />
-                </ExpandMore>
+                    <AddShoppingCart />
+                </IconButton>
             </CardActions>
-            <Collapse in={expanded} timeout="auto" unmountOnExit>
-                <CardContent>
-                    <Typography variant="body2" color="text.secondary">
-                        {flower.description || 'Описание отсутствует'}
-                    </Typography>
-                </CardContent>
-            </Collapse>
+
         </Card>
     );
 };

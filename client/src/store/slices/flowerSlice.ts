@@ -51,25 +51,23 @@ const initialState: DataState = {
     currentSetFlowers:1,
     totalFlowers:1,
     flagFav: false,
+
 };
 
 export const flowerSlice = createSlice({
     name: 'data',
     initialState,
     reducers: {
-        setFlav:(state, action: PayloadAction<string>)=>{
-            const fav:Flower =state.flowers.find(f=>f.id===action.payload)
+        setFlav:(state, action: PayloadAction<number>)=>{
+            const fav:Flower =state.flowers.find(f=>f.id===Number(action.payload))
             state.favorite= [...state.favorite, fav]
-            const temp:Flower[] = state.flowers.filter(f=>f.id!== action.payload)
+            const temp:Flower[] = state.flowers.filter(f=>f.id!== Number(action.payload))
             state.flowers=[fav, ...temp]
         },
         setFlagFav:(state)=>{
             state.flagFav= state.flagFav===false? true: false;
         },
 
-        clearCurrentFlight: (state) => {
-            state.current = null;
-        },
         updateStateFlower: (state, action: PayloadAction<Flower[]>) => {
             state.flowers= action.payload;
             state.currentSetFlowers = 1;
@@ -115,8 +113,11 @@ export const flowerSlice = createSlice({
         });
         builder.addCase(updateFlowerById.fulfilled, (state, action: PayloadAction<Flower>) => {
             state.loading = false;
-            const index = state.flowers.findIndex(flower => flower.id === action.payload.id);
-            state.flowers[index]= action.payload
+            state.originFlowers.rows= state.originFlowers.rows.map(flower=>flower.id===action.payload.id ?  action.payload: flower)
+            const newPayload = {...action.payload, shopId:Number(action.payload.shopId)}
+            state.originFlowers.rows=state.originFlowers.rows.map(flower=> flower.id===newPayload.id? newPayload:flower)
+            state.flowers = state.originFlowers.rows.filter(flower=>flower.shopId=== newPayload.shopId)
+            state.totalFlowers = state.flowers.length
         });
         builder.addCase(updateFlowerById.rejected, (state, action) => {
             state.loading = false;
@@ -128,8 +129,9 @@ export const flowerSlice = createSlice({
         });
         builder.addCase(deleteFlowerById.fulfilled, (state, action: PayloadAction<number>) => {
             state.loading = false;
-            state.flowers = state.flowers.filter(flower=>flower.id!==action.payload);
+            state.flowers = state.flowers.filter(flower=>flower.id!==Number(action.payload));
             state.originFlowers.rows = state.originFlowers.rows.filter(flower=>flower.id!==Number(action.payload));
+            state.totalFlowers -=1;
         });
         builder.addCase(deleteFlowerById.rejected, (state, action) => {
             state.loading = false;
@@ -142,6 +144,8 @@ export const flowerSlice = createSlice({
         builder.addCase(createFlower.fulfilled, (state, action: PayloadAction<Flower>) => {
             state.loading = false;
             state.flowers.push(action.payload);
+            state.originFlowers.rows.push(action.payload);
+            state.totalFlowers +=1;
         });
         builder.addCase(createFlower.rejected, (state, action) => {
             state.loading = false;
